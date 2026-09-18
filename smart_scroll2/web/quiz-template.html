@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Scroll - Квизы</title>
+    <link rel="stylesheet" href="template-styles.css">
+    <link rel="stylesheet" href="quiz-styles.css">
+    
+    <!-- Единая навигация -->
+    <link rel="stylesheet" href="unified-navbar.css?v=2">
+    <script src="unified-navbar.js?v=2"></script>
+    <script src="i18n.js?v=2" defer></script>
+    
+    <!-- Мониторинг яркости экрана -->
+    <script src="brightness-monitor.js"></script>
+    
+    <!-- Smart Currency System -->
+    <script src="smart-currency.js"></script>
+    
+    <!-- TTS Service -->
+    <script src="tts-simple.js"></script>
+    
+    <!-- Button Audio System -->
+    <script src="button-audio.js"></script>
+</head>
+<body>
+    <div class="page">
+        <!-- Единый навбар -->
+        <div id="unified-navbar-container"></div>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Snap Scroll Navigation -->
+            <div class="snap-nav">
+                <div class="snap-nav__item" data-section="category-selection">
+                    <div class="snap-nav__dot"></div>
+                    <span class="snap-nav__label" data-i18n-en="Categories">Категории</span>
+                </div>
+                <div class="snap-nav__item" data-section="quiz-section">
+                    <div class="snap-nav__dot"></div>
+                    <span class="snap-nav__label" data-i18n-en="Quiz">Квиз</span>
+                </div>
+                <div class="snap-nav__item" data-section="statistics-section">
+                    <div class="snap-nav__dot"></div>
+                    <span class="snap-nav__label" data-i18n-en="Statistics">Статистика</span>
+                </div>
+            </div>
+            
+            <div class="content">
+                <!-- Main Content Area -->
+                <div class="main-content">
+                    <!-- Category Selection -->
+                    <div class="content-card" id="category-selection">
+                        <div class="content-card__header">
+                            <h2 class="content-card__title" data-i18n-en="Choose a category">Выберите категорию</h2>
+                        </div>
+                        <div class="content-card__body">
+                            <!-- Search Container -->
+                            <div class="search-container">
+                                <div class="search-box">
+                                    <input type="text" id="search-input" placeholder="Поиск по темам..." data-i18n-en-placeholder="Search topics..." autocomplete="off">
+                                    <div class="search-icon">🔍</div>
+                                </div>
+                                <div id="search-suggestions" class="search-suggestions hidden">
+                                    <!-- Предложения будут загружены динамически -->
+                                </div>
+                            </div>
+                            
+                            <!-- Filter Tags -->
+                            <div class="filter-tags" id="filter-tags">
+                                <!-- Теги для быстрого фильтра будут загружены динамически -->
+                            </div>
+                            
+                            <!-- Questions Count Selector -->
+                            <div class="questions-count-selector">
+                                <label for="questions-count" data-i18n-en="Number of questions:">Количество вопросов:</label>
+                                <select id="questions-count">
+                                    <option value="10" data-i18n-en="10 questions">10 вопросов</option>
+                                    <option value="20" data-i18n-en="20 questions">20 вопросов</option>
+                                    <option value="30" data-i18n-en="30 questions">30 вопросов</option>
+                                    <option value="50" selected data-i18n-en="50 questions">50 вопросов</option>
+                                    <option value="100" data-i18n-en="100 questions">100 вопросов</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Categories Grid -->
+                            <div class="categories-grid" id="categories-grid">
+                                <!-- Категории будут загружены динамически -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Section -->
+                    <div class="content-card hidden" id="quiz-section">
+                        <div class="content-card__header">
+                            <h2 class="content-card__title" id="quiz-title" data-i18n-en="Quiz">Квиз</h2>
+                            <div class="quiz-progress">
+                                <span id="current-question">1</span> / <span id="total-questions">10</span>
+                            </div>
+                        </div>
+                        <div class="content-card__body">
+                            <!-- Question Container -->
+                            <div class="question-container">
+                                <h3 id="question-text" data-i18n-en="Question">Вопрос</h3>
+                                <div class="answers" id="answers-container">
+                                    <!-- Варианты ответов будут загружены динамически -->
+                                </div>
+                            </div>
+
+                            <!-- Quiz Controls -->
+                            <div class="quiz-controls">
+                                <button id="prev-question" class="btn btn-secondary hidden">← <span data-i18n-en="Previous">Предыдущий</span></button>
+                                <button id="next-question" class="btn btn-primary hidden"><span data-i18n-en="Next">Следующий</span> →</button>
+                                <button id="finish-quiz" class="btn btn-success hidden" data-i18n-en="Finish quiz">Завершить квиз</button>
+                            </div>
+
+                            <!-- Question Navigation -->
+                            <div class="question-navigation">
+                                <div class="nav-header">
+                                    <h4 data-i18n-en="Question navigation">Навигация по вопросам</h4>
+                                    <div class="nav-legend">
+                                        <div class="legend-item">
+                                            <span class="legend-dot correct"></span>
+                                            <span data-i18n-en="Correct">Правильно</span>
+                                        </div>
+                                        <div class="legend-item">
+                                            <span class="legend-dot incorrect"></span>
+                                            <span data-i18n-en="Incorrect">Неправильно</span>
+                                        </div>
+                                        <div class="legend-item">
+                                            <span class="legend-dot answered"></span>
+                                            <span data-i18n-en="Answered">Отвечено</span>
+                                        </div>
+                                        <div class="legend-item">
+                                            <span class="legend-dot current"></span>
+                                            <span data-i18n-en="Current">Текущий</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="questions-grid" id="questions-grid">
+                                    <!-- Кнопки вопросов будут загружены динамически -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Section -->
+                    <div class="content-card hidden" id="statistics-section">
+                        <div class="content-card__header">
+                            <h2 class="content-card__title" data-i18n-en="Statistics">Статистика</h2>
+                            <div class="statistics-actions">
+                                <button class="btn btn-secondary" onclick="window.quizApp.showCategorySelection()">
+                                    ← <span data-i18n-en="Back to categories">Назад к категориям</span>
+                                </button>
+                                <button class="btn btn-primary" onclick="window.quizApp.showStatistics()">
+                                    🔄 <span data-i18n-en="Refresh">Обновить</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="content-card__body">
+                            <!-- Overall Stats -->
+                            <div class="stats-overview">
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="stat-number" id="total-quizzes">0</div>
+                                        <div class="stat-label" data-i18n-en="Total quizzes">Всего квизов</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="stat-number" id="total-questions">0</div>
+                                        <div class="stat-label" data-i18n-en="Total questions">Всего вопросов</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="stat-number" id="correct-answers">0</div>
+                                        <div class="stat-label" data-i18n-en="Correct">Правильных</div>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                                        </svg>
+                                    </div>
+                                    <div class="stat-content">
+                                        <div class="stat-number" id="incorrect-answers">0</div>
+                                        <div class="stat-label" data-i18n-en="Incorrect">Неправильных</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Accuracy Chart -->
+                            <div class="accuracy-section">
+                                <h3 data-i18n-en="Answer accuracy">Точность ответов</h3>
+                                <div class="accuracy-circle">
+                                    <div class="accuracy-percentage" id="accuracy-percentage">0%</div>
+                                    <div class="accuracy-label" data-i18n-en="Accuracy">Точность</div>
+                                </div>
+                            </div>
+
+                            <!-- Recent Quizzes -->
+                            <div class="recent-quizzes">
+                                <h3 data-i18n-en="Recent quizzes">Последние квизы</h3>
+                                <div class="quiz-history" id="quiz-history">
+                                    <div class="no-history">
+                                        <p data-i18n-en="No quizzes completed yet">Пока нет пройденных квизов</p>
+                                        <p data-i18n-en="Start your first quiz!">Начните свой первый квиз!</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Category Performance -->
+                            <div class="category-performance">
+                                <h3 data-i18n-en="Results by category">Результаты по категориям</h3>
+                                <div class="category-stats" id="category-stats">
+                                    <div class="no-category-stats">
+                                        <p data-i18n-en="Category statistics will appear after completing quizzes">Статистика по категориям появится после прохождения квизов</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Sidebar -->
+                <div class="right-sidebar">
+                    <div class="right-sidebar__item" data-action="content">
+                        <svg class="right-sidebar__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                            <path fill-rule="evenodd" d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625ZM7.5 15a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 7.5 15Zm.75 2.25a.75.75 0 0 0 0 1.5H12a.75.75 0 0 0 0-1.5H8.25Z" clip-rule="evenodd" />
+                            <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
+                        </svg>
+                    </div>
+                    <div class="right-sidebar__item" data-action="quiz">
+                        <svg class="right-sidebar__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                            <path d="M16.5 6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7.5a3 3 0 0 0 3 3v-6A4.5 4.5 0 0 1 10.5 6h6Z" />
+                            <path d="M18 7.5a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-7.5a3 3 0 0 1-3-3v-7.5a3 3 0 0 1 3-3H18Z" />
+                        </svg>
+                    </div>
+                    <div class="right-sidebar__item right-sidebar__item--active" data-action="notes">
+                        <svg class="right-sidebar__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                            <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Sidebar Content Cards -->
+                <div class="sidebar-content">
+                    <!-- Summary Card -->
+                    <div class="summary-card" id="summaryCard" style="display: none;">
+                        <div class="summary-card__header">
+                            <svg class="summary-card__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625ZM7.5 15a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 7.5 15Zm.75 2.25a.75.75 0 0 0 0 1.5H12a.75.75 0 0 0 0-1.5H8.25Z" clip-rule="evenodd" />
+                                <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
+                            </svg>
+                            <h3 class="summary-card__title" data-i18n-en="Content">Содержание</h3>
+                        </div>
+                        <div class="summary-card__content">
+                            <p class="summary-card__text" data-i18n-en="An educational platform with quizzes on various topics. Choose a category and the number of questions to start a quiz.">
+                                Образовательная платформа с викторинами по различным темам. Выберите категорию и количество вопросов для начала квиза.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Notes Card -->
+                    <div class="notes-card" id="notesCard" style="display: none;">
+                        <div class="notes-card__header">
+                            <svg class="notes-card__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
+                            </svg>
+                            <h3 class="notes-card__title" data-i18n-en="Notes">Заметки</h3>
+                        </div>
+                        <div class="notes-card__content">
+                            <textarea class="notes-card__textarea" placeholder="Добавьте свои заметки о квизах..." data-i18n-en-placeholder="Add your notes about the quizzes..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Card -->
+                    <div class="quiz-card" id="quizCard" style="display: none;">
+                        <div class="quiz-card__header">
+                            <svg class="quiz-card__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M16.5 6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7.5a3 3 0 0 0 3 3v-6A4.5 4.5 0 0 1 10.5 6h6Z" />
+                                <path d="M18 7.5a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-7.5a3 3 0 0 1-3-3v-7.5a3 3 0 0 1 3-3H18Z" />
+                            </svg>
+                            <h3 class="quiz-card__title" data-i18n-en="Quick quiz">Быстрый квиз</h3>
+                        </div>
+                        <div class="quiz-card__content">
+                            <p class="quiz-card__question" id="sidebar-question" data-i18n-en="Choose a category to start the quiz">
+                                Выберите категорию для начала квиза
+                            </p>
+                            <div class="quiz-card__options" id="sidebar-options">
+                                <button class="quiz-card__option" onclick="startQuickQuiz('general')" data-i18n-en="General knowledge">Общие знания</button>
+                                <button class="quiz-card__option" onclick="startQuickQuiz('science-technology')" data-i18n-en="Science">Наука</button>
+                                <button class="quiz-card__option" onclick="startQuickQuiz('history')" data-i18n-en="History">История</button>
+                                <button class="quiz-card__option" onclick="startQuickQuiz('geography')" data-i18n-en="Geography">География</button>
+                                <button class="quiz-card__option" onclick="startQuickQuiz('literature')" data-i18n-en="Literature">Литература</button>
+                                <button class="quiz-card__option" onclick="startQuickQuiz('music')" data-i18n-en="Music">Музыка</button>
+                                <button class="quiz-card__option" onclick="startQuickQuiz('movies')" data-i18n-en="Movies">Кино</button>
+                                <button class="quiz-card__option" onclick="startQuickQuiz('sports')" data-i18n-en="Sports">Спорт</button>
+                            </div>
+                            <div class="quiz-card__navigation">
+                                <button class="quiz-card__nav" onclick="showAllCategories()">
+                                    <svg class="quiz-card__nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M7.72 12.53a.75.75 0 0 1 0-1.06L10.94 8.25a.75.75 0 1 1 1.06 1.06L9.06 12l2.94 2.69a.75.75 0 1 1-1.06 1.06L7.72 12.53Z" clip-rule="evenodd" />
+                                    </svg>
+                                    <span data-i18n-en="All categories">Все категории</span>
+                                </button>
+                                <button class="quiz-card__nav" onclick="startRandomQuiz()">
+                                    <span data-i18n-en="Random quiz">Случайный квиз</span>
+                                    <svg class="quiz-card__nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M16.28 11.47a.75.75 0 0 1 0 1.06l-3.22 3.22a.75.75 0 1 1-1.06-1.06L14.94 12l-2.94-2.69a.75.75 0 1 1 1.06-1.06l3.22 3.22Z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <!-- Load quiz data and scripts -->
+    <script src="quiz-data-full.js"></script>
+    <script src="script.js"></script>
+    <script src="quiz-script.js"></script>
+    
+    <!-- Загрузка единого навбара -->
+    <script>
+        // Загружаем единый навбар
+        fetch('unified-navbar.html?v=2')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('unified-navbar-container').innerHTML = html;
+                // Инициализируем навбар после загрузки
+                if (window.initializeNavbar) {
+                    window.initializeNavbar();
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка загрузки единого навбара:', error);
+            });
+    </script>
+</body>
+</html>

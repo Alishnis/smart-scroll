@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Last-Modified" content="0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+    <title>Посты - SmartScroll</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="unified-navbar.css?v=2">
+    <script src="unified-navbar.js?v=2"></script>
+    <script src="i18n.js?v=2" defer></script>
+    
+    <!-- Мониторинг яркости экрана -->
+    <script src="brightness-monitor.js?v=2"></script>
+    
+    <!-- Продвинутый сервис Reddit -->
+    <script src="reddit_advanced_service.js?v=2"></script>
+    
+    <!-- Smart Currency System -->
+    <script src="smart-currency.js?v=2"></script>
+    
+    <!-- TTS Service -->
+    <script src="tts-simple.js?v=2"></script>
+    
+    <!-- Button Audio System -->
+    <script src="button-audio.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: white;
+            overflow-x: hidden;
+            height: 100vh;
+        }
+
+        /* Smart Currency Display */
+        .smart-currency-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #30CAA1 0%, #20A0FF 100%);
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(48, 202, 161, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .smart-currency-display:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(48, 202, 161, 0.4);
+        }
+
+        .smart-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .smart-amount {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .smart-text {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+
+        .feed-container {
+            height: 100vh;
+            overflow-y: auto;
+            scroll-snap-type: y mandatory;
+            -webkit-overflow-scrolling: touch;
+            padding-top: 120px;
+        }
+
+        .post-section {
+            height: 100vh;
+            flex-shrink: 0;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            scroll-snap-align: start;
+        }
+
+        .post-card {
+            background: rgba(44, 44, 46, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 700px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .post-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .tag-post {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+            color: white;
+        }
+
+        .tag-category {
+            background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+            color: white;
+        }
+
+        .tag-nsfw {
+            background: linear-gradient(135deg, #FF4757 0%, #FF3742 100%);
+            color: white;
+        }
+
+        .post-image-container {
+            position: relative;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .post-image-container:hover {
+            transform: scale(1.02);
+        }
+
+        .post-image {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-overlay {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+            backdrop-filter: blur(5px);
+        }
+
+        .post-content {
+            margin-bottom: 20px;
+        }
+
+        .post-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            line-height: 1.3;
+            color: white;
+        }
+
+        .post-subreddit {
+            color: #30CAA1;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .post-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .post-stats {
+            display: flex;
+            gap: 25px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .action-btn.source {
+            background: linear-gradient(135deg, #30CAA1 0%, #20A0FF 100%);
+            border: none;
+        }
+
+        .action-btn.source:hover {
+            box-shadow: 0 4px 12px rgba(48, 202, 161, 0.3);
+        }
+
+        .action-btn.share {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+            border: none;
+        }
+
+        .action-btn.share:hover {
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+
+
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid #30CAA1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .empty-state h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .empty-state p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .search-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .suggestion-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .suggestion-btn:hover {
+            background: linear-gradient(135deg, #30CAA1 0%, #20A0FF 100%);
+            transform: translateY(-2px);
+        }
+
+
+        .error-message {
+            background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #30CAA1 0%, #20A0FF 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        /* Модальное окно для полноэкранного просмотра изображений */
+        .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .image-modal-content {
+            background: #2C2C2E;
+            border-radius: 12px;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .image-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .image-modal-header h3 {
+            color: white;
+            font-size: 16px;
+            margin: 0;
+            flex: 1;
+            margin-right: 15px;
+        }
+
+        .image-modal-header .close-btn {
+            background: #FF6B6B;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-modal-body {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .fullscreen-image {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        /* Адаптивность */
+        @media screen and (max-width: 1440px) {
+            .header {
+                padding: 20px 80px;
+            }
+        }
+
+        @media screen and (max-width: 1024px) {
+            .header {
+                padding: 16px 40px;
+            }
+            
+            .header__title {
+                font-size: 32px;
+            }
+            
+            .header__logo-icon {
+                width: 35px;
+                height: 35px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 12px 20px;
+            }
+            
+            .header__title {
+                font-size: 24px;
+            }
+            
+            .header__logo-icon {
+                width: 30px;
+                height: 30px;
+            }
+
+            .search-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .search-input {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+                padding: 16px;
+            }
+            
+            .header__logo-icon {
+                width: 28px;
+                height: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="unified-navbar-container"></div>
+    <div class="page">
+
+        <!-- Main Content -->
+        <main class="main">
+            <div class="content">
+                <!-- Main Content Area -->
+    <div class="main-content">
+                    
+                    <!-- Posts Container -->
+                    <div class="feed-container" id="feedContainer" style="padding-top: 120px;">
+        <div id="postsContainer">
+            <div class="empty-state">
+                <h3 data-i18n-en="🔍 Start searching">🔍 Начните поиск</h3>
+                <p data-i18n-en="Enter a query or choose a popular topic">Введите запрос или выберите популярную тему</p>
+                <div class="search-suggestions">
+                    <button class="suggestion-btn" onclick="searchForTopic('programming')" data-i18n-en="Programming">Программирование</button>
+                    <button class="suggestion-btn" onclick="searchForTopic('technology')" data-i18n-en="Technology">Технологии</button>
+                    <button class="suggestion-btn" onclick="searchForTopic('science')" data-i18n-en="Science">Наука</button>
+                    <button class="suggestion-btn" onclick="searchForTopic('news')" data-i18n-en="News">Новости</button>
+                    <button class="suggestion-btn" onclick="testSearch()" style="background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);" data-i18n-en="🔧 Test search">🔧 Тест поиска</button>
+                </div>
+            </div>
+        </div>
+    </div>
+            </div>
+                </div>
+        </main>
+
+    <!-- Загрузка единого навбара -->
+    <script>
+        // Загружаем единый навбар
+        fetch('unified-navbar.html?v=2')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('unified-navbar-container').innerHTML = html;
+                // Инициализируем навбар после загрузки
+                if (window.initializeNavbar) {
+                    window.initializeNavbar();
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка загрузки единого навбара:', error);
+            });
+    </script>
+
+    <script>
+        // Переменные
+        let redditService = null;
+        let allPosts = [];
+        let currentSearchQuery = '';
+        let currentPostIndex = 0;
+        let isScrolling = false;
+
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Инициализация страницы постов');
+            
+            // Инициализируем продвинутый сервис Reddit
+            redditService = new RedditAdvancedService();
+            console.log('✅ RedditAdvancedService инициализирован');
+            
+            // Инициализируем Smart валюту
+            if (window.SmartCurrency) {
+                window.SmartCurrency.updateDisplay();
+                console.log('✅ Smart Currency инициализирована');
+            } else {
+                // Fallback для Smart Currency если модуль не загружен
+                const smartCurrencyDisplay = document.getElementById('smartCurrencyDisplay');
+                if (smartCurrencyDisplay) {
+                    const smartAmount = smartCurrencyDisplay.querySelector('.smart-amount');
+                    if (smartAmount) {
+                        // Получаем сохраненное значение или устанавливаем 0
+                        const savedAmount = localStorage.getItem('smartCurrencyAmount') || '0';
+                        smartAmount.textContent = savedAmount;
+                    }
+                }
+            }
+            
+            // Инициализация TTS
+            if (window.TTSService) {
+                // Проверяем настройки TTS
+                const ttsSettings = localStorage.getItem('ttsSettings');
+                if (ttsSettings) {
+                    const settings = JSON.parse(ttsSettings);
+                    if (settings.enabled) {
+                        window.TTSService.enableTTS();
+                        console.log('🔊 TTS автоматически включен');
+                    }
+                }
+            }
+            
+            // Добавляем обработчик Enter для поля поиска
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
+            
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        console.log('⌨️ Нажата клавиша Enter в posts.html');
+                        performPostSearch();
+                    }
+                });
+                console.log('✅ Обработчик Enter добавлен к полю поиска в posts.html');
+            } else {
+                console.log('❌ Поле поиска не найдено при инициализации в posts.html');
+            }
+            
+            if (searchButton) {
+                console.log('✅ Кнопка поиска найдена');
+            } else {
+                console.log('❌ Кнопка поиска не найдена');
+            }
+            
+            // Инициализируем snap-scroll
+            initSnapScroll();
+            
+            // Проверяем, есть ли уже текст в поле поиска
+            setTimeout(() => {
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput && searchInput.value.trim()) {
+                    console.log('🔍 Найден текст в поле поиска при загрузке:', searchInput.value);
+                    performSearch();
+                }
+            }, 1000);
+            
+        });
+
+        // Функции поиска постов
+        function performPostSearch() {
+            const searchInput = document.getElementById('searchInput');
+            
+            if (!searchInput) {
+                console.error('❌ Поле поиска не найдено в posts.html');
+                alert('Ошибка: поле поиска не найдено');
+                return;
+            }
+            
+            const query = searchInput.value.trim();
+            console.log('🔍 Поиск постов по запросу:', query);
+            console.log('📝 Значение поля:', searchInput.value);
+            console.log('📝 Обрезанное значение:', query);
+            
+            if (!query) {
+                console.log('❌ Запрос пустой в posts.html');
+                alert('Пожалуйста, введите ключевые слова для поиска');
+                return;
+            }
+            
+            console.log('✅ Запрос не пустой, запускаем поиск постов');
+            currentSearchQuery = query;
+            searchPosts(query);
+        }
+        
+        // Алиас для совместимости
+        function performSearch() {
+            console.log('🔄 Вызвана performSearch в posts.html, перенаправляем на performPostSearch');
+            performPostSearch();
+        }
+
+        function searchForTopic(topic) {
+            console.log('Поиск по теме:', topic);
+            currentSearchQuery = topic;
+            document.getElementById('searchInput').value = topic;
+            searchPosts(topic);
+        }
+
+        // Функция для тестирования поиска
+        function testSearch() {
+            console.log('🔧 Тестируем поиск в posts.html...');
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.value = 'technology';
+                console.log('✅ Установили тестовый запрос: technology');
+                performPostSearch();
+            } else {
+                console.log('❌ Поле поиска не найдено в posts.html');
+                alert('Поле поиска не найдено. Проверьте консоль для отладки.');
+            }
+        }
+
+        // Продвинутый поиск постов в Reddit
+        async function searchPosts(query) {
+            const postsContainer = document.getElementById('postsContainer');
+            postsContainer.innerHTML = '<div class="loading"><div class="loading-spinner"></div><div>🔍 Ищем посты в Reddit...</div></div>';
+
+            try {
+                console.log('Запускаем продвинутый поиск постов:', query);
+                
+                if (!redditService) {
+                    throw new Error('RedditAdvancedService не инициализирован');
+                }
+
+                // Используем продвинутый сервис для поиска
+                const result = await redditService.searchPosts(query, {
+                    limit: 10,
+                    sort: 'relevance',
+                    time: 'all',
+                    includeOver18: true
+                });
+
+                if (result.success && result.posts.length > 0) {
+                    console.log(`✅ Найдено ${result.posts.length} постов`);
+                    if (result.isDemo) {
+                        console.log('🎭 Показываем демо-посты (прокси не работают)');
+                    }
+                    allPosts = result.posts;
+                    displayPosts(result.posts, result.isDemo);
+                } else {
+                    console.log('Поиск не дал результатов, показываем демо-посты');
+                    showDemoPosts(query);
+                }
+
+            } catch (error) {
+                console.error('Ошибка продвинутого поиска:', error);
+                
+                // Fallback - показываем демо-посты
+                console.log('Переключаемся на демо-режим');
+                showDemoPosts(query);
+            }
+        }
+
+        // Отображение постов
+        function displayPosts(posts, isDemo = false) {
+            const postsContainer = document.getElementById('postsContainer');
+            
+            if (posts.length === 0) {
+                postsContainer.innerHTML = '<div class="empty-state"><h3>😔 Посты не найдены</h3><p>Попробуйте другие ключевые слова</p></div>';
+                return;
+            }
+
+            const postsHTML = posts.map((post, index) => {
+                return createPostSection(post, index);
+            }).join('');
+
+            // Добавляем индикатор демо-режима
+            const demoIndicator = isDemo ? `
+                <div class="success-message" style="margin-bottom: 20px;">
+                    🎭 Демо-режим: Показываем примеры постов (прокси сервисы недоступны)
+                </div>
+            ` : '';
+
+            postsContainer.innerHTML = demoIndicator + postsHTML;
+        }
+
+        // Создание секции поста
+        function createPostSection(post, index) {
+                // Определяем лучшее изображение для отображения
+                const bestImage = post.preview || post.thumbnail || '';
+                const hasImage = bestImage && bestImage !== 'self' && bestImage !== 'default' && bestImage.startsWith('http');
+                
+                const imageHTML = hasImage ? `
+                    <div class="post-image-container">
+                    <img src="${getProxiedImageUrl(bestImage)}" 
+                             alt="${post.title}" 
+                             class="post-image"
+                             onerror="handleImageError(this, '${bestImage}')"
+                             onclick="openImageFullscreen('${bestImage}', '${post.title}')">
+                        <div class="image-overlay">
+                        <span>📷 Фото</span>
+                        </div>
+                    </div>
+                ` : '';
+
+                // Определяем основную ссылку для кнопки "Источник"
+                const mainUrl = createRedditUrl(post);
+                const isRedditLink = mainUrl.includes('reddit.com');
+
+                return `
+                <div class="post-section" id="post-section-${index}">
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="post-tags">
+                                <span class="tag tag-post">Пост</span>
+                                <span class="tag tag-category">${getPostCategory(post.subreddit)}</span>
+                                ${post.over18 ? '<span class="tag tag-nsfw">NSFW</span>' : ''}
+                            </div>
+                        </div>
+                        ${imageHTML}
+                        <div class="post-content">
+                            <div class="post-title">${post.title}</div>
+                            <div class="post-subreddit">r/${post.subreddit}</div>
+                            <div class="post-description">${post.description.substring(0, 300)}${post.description.length > 300 ? '...' : ''}</div>
+                            <div class="post-stats">
+                                <div class="stat">
+                                    <span>⬆️</span>
+                                    <span>${formatNumber(post.score)}</span>
+                                </div>
+                                <div class="stat">
+                                    <span>💬</span>
+                                    <span>${formatNumber(post.numComments)}</span>
+                                </div>
+                                <div class="stat">
+                                    <span>👤</span>
+                                    <span>u/${post.author}</span>
+                                </div>
+                            </div>
+                            <div class="post-actions">
+                                <button class="action-btn source" onclick="openSource('${mainUrl}', '${post.title}')">
+                                    <span>🔗</span>
+                                    <span>${isRedditLink ? 'Reddit' : 'Источник'}</span>
+                                </button>
+                                ${post.url && post.url !== post.permalink ? `
+                                    <button class="action-btn" onclick="openSource('${post.url}', '${post.title}')" style="background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);">
+                                        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></span>
+                                        <span>Контент</span>
+                                    </button>
+                                ` : ''}
+                                <button class="action-btn share" onclick="sharePost('${post.title}', '${post.permalink || post.url}')">
+                                    <span><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg></span>
+                                    <span>Поделиться</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            `;
+        }
+
+
+        // Snap-scroll функциональность
+        function initSnapScroll() {
+            const feedContainer = document.getElementById('feedContainer');
+            
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowDown' || e.key === 'PageDown') {
+                    e.preventDefault();
+                    scrollToNextPost();
+                } else if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+                    e.preventDefault();
+                    scrollToPreviousPost();
+                } else if (e.key === 'Home') {
+                    e.preventDefault();
+                    scrollToPost(0);
+                } else if (e.key === 'End') {
+                    e.preventDefault();
+                    const totalPosts = document.querySelectorAll('.post-section').length;
+                    scrollToPost(totalPosts - 1);
+                }
+            });
+            
+            feedContainer.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                if (isScrolling) return;
+                
+                const delta = e.deltaY > 0 ? 1 : -1;
+                if (delta > 0) {
+                    scrollToNextPost();
+            } else {
+                    scrollToPreviousPost();
+                }
+            });
+            
+            let touchStartY = 0;
+            let touchStartTime = 0;
+            
+            feedContainer.addEventListener('touchstart', function(e) {
+                touchStartY = e.touches[0].clientY;
+                touchStartTime = Date.now();
+            });
+            
+            feedContainer.addEventListener('touchend', function(e) {
+                if (isScrolling) return;
+                
+                const touchEndY = e.changedTouches[0].clientY;
+                const touchEndTime = Date.now();
+                const delta = touchStartY - touchEndY;
+                const timeDelta = touchEndTime - touchStartTime;
+                
+                if (Math.abs(delta) > 50 && timeDelta < 300) {
+                    if (delta > 0) {
+                        scrollToNextPost();
+                    } else {
+                        scrollToPreviousPost();
+                    }
+                }
+            });
+            
+            feedContainer.addEventListener('scroll', function() {
+                updateCurrentPostIndex();
+            });
+        }
+
+        function updateCurrentPostIndex() {
+            const feedContainer = document.getElementById('feedContainer');
+            const postSections = document.querySelectorAll('.post-section');
+            const scrollTop = feedContainer.scrollTop;
+            const windowHeight = window.innerHeight;
+            
+            for (let i = 0; i < postSections.length; i++) {
+                const sectionTop = i * windowHeight;
+                const sectionBottom = (i + 1) * windowHeight;
+                
+                if (scrollTop >= sectionTop && scrollTop < sectionBottom) {
+                    if (currentPostIndex !== i) {
+                        currentPostIndex = i;
+                        console.log('Current post changed to:', currentPostIndex);
+                    }
+                    break;
+                }
+            }
+        }
+
+        function scrollToPost(index) {
+            if (isScrolling) return;
+            isScrolling = true;
+            
+            
+            const feedContainer = document.getElementById('feedContainer');
+            const postSections = document.querySelectorAll('.post-section');
+            
+            if (index >= 0 && index < postSections.length) {
+                const targetScroll = index * window.innerHeight;
+                
+                feedContainer.scrollTo({
+                    top: targetScroll,
+                    behavior: 'smooth'
+                });
+                
+                currentPostIndex = index;
+            }
+            
+            setTimeout(() => {
+                isScrolling = false;
+            }, 800);
+        }
+
+        function scrollToNextPost() {
+            const postSections = document.querySelectorAll('.post-section');
+            const nextIndex = Math.min(currentPostIndex + 1, postSections.length - 1);
+            scrollToPost(nextIndex);
+        }
+
+        function scrollToPreviousPost() {
+            const prevIndex = Math.max(currentPostIndex - 1, 0);
+            scrollToPost(prevIndex);
+        }
+
+        // Показ демо-постов (fallback)
+        function showDemoPosts(query) {
+            const demoPosts = generateDemoPosts(query);
+            displayPosts(demoPosts, true);
+        }
+
+        // Генерация демо-постов
+        function generateDemoPosts(query) {
+            const demoPosts = [
+                {
+                    id: 'demo1',
+                    title: `Learn ${query} Programming - Complete Tutorial`,
+                    subreddit: 'learnprogramming',
+                    description: `Master ${query} programming with this comprehensive tutorial. Perfect for beginners who want to start their programming journey.`,
+                    author: 'CodeMaster',
+                    score: 1250,
+                    numComments: 89,
+                    created: new Date(),
+                    url: 'https://www.reddit.com/r/learnprogramming/',
+                    thumbnail: 'https://picsum.photos/800/400?random=1',
+                    isVideo: false,
+                    over18: false
+                },
+                {
+                    id: 'demo2',
+                    title: `${query} Best Practices and Tips`,
+                    subreddit: 'programming',
+                    description: `Discover the best practices for ${query} development. Learn from experienced developers and improve your coding skills.`,
+                    author: 'DevGuru',
+                    score: 890,
+                    numComments: 45,
+                    created: new Date(),
+                    url: 'https://www.reddit.com/r/programming/',
+                    thumbnail: 'https://picsum.photos/800/400?random=2',
+                    isVideo: false,
+                    over18: false
+                },
+                {
+                    id: 'demo3',
+                    title: `Advanced ${query} Concepts Explained`,
+                    subreddit: 'technology',
+                    description: `Deep dive into advanced ${query} concepts. Perfect for intermediate developers looking to level up their skills.`,
+                    author: 'TechExpert',
+                    score: 2100,
+                    numComments: 156,
+                    created: new Date(),
+                    url: 'https://www.reddit.com/r/technology/',
+                    thumbnail: 'https://picsum.photos/800/400?random=3',
+                    isVideo: false,
+                    over18: false
+                }
+            ];
+
+            return demoPosts;
+        }
+
+        // Вспомогательные функции
+        function createRedditUrl(post) {
+            if (post.permalink) {
+                const permalink = post.permalink.startsWith('/') ? post.permalink : `/${post.permalink}`;
+                return `https://www.reddit.com${permalink}`;
+            }
+            
+            if (post.subreddit && post.id) {
+                return `https://www.reddit.com/r/${post.subreddit}/comments/${post.id}/`;
+            }
+            
+            if (post.subreddit) {
+                return `https://www.reddit.com/r/${post.subreddit}/`;
+            }
+            
+            return 'https://www.reddit.com/';
+        }
+
+        function getProxiedImageUrl(originalUrl) {
+            if (!originalUrl) return '';
+            
+            if (originalUrl.includes('images.weserv.nl') || 
+                originalUrl.includes('cors-anywhere.herokuapp.com') ||
+                originalUrl.includes('api.allorigins.win') ||
+                originalUrl.includes('thingproxy.freeboard.io')) {
+                return originalUrl;
+            }
+            
+            if (originalUrl.includes('picsum.photos')) {
+                return originalUrl;
+            }
+            
+            if (originalUrl.includes('redd.it') || 
+                originalUrl.includes('preview.redd.it') ||
+                originalUrl.includes('i.redd.it') ||
+                originalUrl.includes('external-preview.redd.it') ||
+                originalUrl.includes('i.redditmedia.com') ||
+                originalUrl.includes('preview.redditmedia.com') ||
+                originalUrl.includes('reddit.com')) {
+                
+                return `https://images.weserv.nl/?url=${encodeURIComponent(originalUrl)}&output=webp&q=85&n=-1&w=800&h=600&fit=cover`;
+            }
+            
+            if (originalUrl.includes('imgur.com') || 
+                originalUrl.includes('gyazo.com') ||
+                originalUrl.includes('flickr.com') ||
+                originalUrl.includes('unsplash.com') ||
+                originalUrl.includes('pexels.com')) {
+                
+                return `https://images.weserv.nl/?url=${encodeURIComponent(originalUrl)}&output=webp&q=80&n=-1&w=800`;
+            }
+            
+            if (originalUrl.startsWith('http')) {
+                return `https://images.weserv.nl/?url=${encodeURIComponent(originalUrl)}&output=webp&q=80&n=-1&w=800`;
+            }
+            
+            return originalUrl;
+        }
+
+        function handleImageError(imgElement, originalUrl) {
+            console.log('Ошибка загрузки изображения:', imgElement.src);
+            imgElement.src = 'https://via.placeholder.com/800x400/333333/ffffff?text=Image+Not+Available';
+            imgElement.onerror = null;
+        }
+
+        function openImageFullscreen(imageUrl, title) {
+            const modal = document.createElement('div');
+            modal.className = 'image-modal';
+            modal.innerHTML = `
+                <div class="image-modal-content">
+                    <div class="image-modal-header">
+                        <h3>${title}</h3>
+                        <button class="close-btn" onclick="this.closest('.image-modal').remove()">✕</button>
+                    </div>
+                    <div class="image-modal-body">
+                        <img src="${getProxiedImageUrl(imageUrl)}" alt="${title}" class="fullscreen-image">
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
+        function getPostCategory(subreddit) {
+            const categories = {
+                'programming': 'Программирование',
+                'learnprogramming': 'Обучение',
+                'webdev': 'Веб-разработка',
+                'javascript': 'JavaScript',
+                'python': 'Python',
+                'reactjs': 'React',
+                'node': 'Node.js',
+                'MachineLearning': 'ИИ/ML',
+                'technology': 'Технологии',
+                'science': 'Наука',
+                'news': 'Новости'
+            };
+            return categories[subreddit.toLowerCase()] || 'Другое';
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            } else {
+                return num.toString();
+            }
+        }
+
+        function openSource(url, title) {
+            console.log('Открываем источник:', title, 'URL:', url);
+            
+            if (!url || url === '#' || url === 'self' || url === 'default' || url === '') {
+                alert('Ссылка на источник недоступна для этого поста');
+                return;
+            }
+            
+            try {
+                const urlObj = new URL(url);
+                window.open(url, '_blank', 'noopener,noreferrer,width=1200,height=800');
+            } catch (error) {
+                console.error('Некорректный URL:', url, error);
+                alert('Некорректная ссылка на источник: ' + url);
+            }
+        }
+
+        function sharePost(title, url) {
+            console.log('Делимся постом:', title);
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: title,
+                    text: `Посмотрите этот интересный пост: ${title}`,
+                    url: url !== '#' ? url : window.location.href
+                }).catch(err => {
+                    console.log('Ошибка при попытке поделиться:', err);
+                    fallbackShare(title, url);
+                });
+            } else {
+                fallbackShare(title, url);
+            }
+        }
+
+        function fallbackShare(title, url) {
+            const shareText = `Посмотрите этот интересный пост: ${title}`;
+            const shareUrl = url !== '#' ? url : window.location.href;
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(`${shareText}\n${shareUrl}`).then(() => {
+                    alert('Ссылка скопирована в буфер обмена!');
+                }).catch(() => {
+                    alert('Ссылка для поделиться: ' + shareUrl);
+                });
+            } else {
+                alert('Ссылка для поделиться: ' + shareUrl);
+            }
+        }
+
+        // Инициализация snap-scroll после загрузки
+        setTimeout(() => {
+            updateCurrentPostIndex();
+            console.log('Snap scroll initialized, current post:', currentPostIndex);
+        }, 1000);
+    </script>
+    </div>
+    
+</body>
+</html>

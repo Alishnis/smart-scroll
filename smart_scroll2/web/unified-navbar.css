@@ -1,0 +1,532 @@
+/* Единые стили для навбара SmartScroll */
+
+/* Верхний навбар */
+.ss-header {
+    position: relative !important;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    height: 80px;
+    box-sizing: border-box;
+}
+
+.ss-header__title {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+    background: linear-gradient(135deg, #30CAA1 0%, #20A0FF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.ss-header__search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ss-header__right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.ss-search-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 8px 16px;
+    color: white;
+    font-size: 14px;
+    width: 200px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+.ss-search-input:focus {
+    border-color: #30CAA1;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.ss-search-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.ss-search-btn {
+    background: linear-gradient(135deg, #30CAA1 0%, #20A0FF 100%);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.ss-search-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 16px rgba(48, 202, 161, 0.4);
+}
+
+.ss-search-icon {
+    width: 20px;
+    height: 20px;
+    color: white;
+}
+
+.smart-currency-display {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.smart-icon {
+    font-size: 16px;
+}
+
+.smart-amount {
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.smart-text {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+}
+
+.ss-header__logo-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* The EN/RU toggle button itself is injected by i18n.js (with its own
+   inline styles) so it works consistently on pages that don't build their
+   header from this file's markup. See i18n.js for its appearance rules. */
+
+/* Нижний навбар */
+.ss-navbar {
+    position: fixed !important;
+    bottom: 20px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    background: linear-gradient(145deg, rgba(20, 20, 20, 0.95), rgba(30, 30, 30, 0.95));
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    z-index: 1000;
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    box-sizing: border-box;
+    max-width: 92vw;
+    width: auto;
+    gap: 4px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.ss-navbar::-webkit-scrollbar {
+    display: none;
+}
+
+.ss-navbar__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 8px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 18px;
+    position: relative;
+    min-width: 56px;
+    flex-shrink: 0;
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.6);
+    background: transparent;
+    margin: 0;
+}
+
+.ss-navbar__item:hover {
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+}
+
+.ss-navbar__item--active {
+    color: #30CAA1 !important;
+    background: linear-gradient(145deg, rgba(48, 202, 161, 0.18), rgba(32, 160, 255, 0.18)) !important;
+    box-shadow:
+        0 4px 15px rgba(32, 160, 255, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    animation: navbarItemPulse 2s ease-in-out infinite;
+}
+
+.ss-navbar__item--active .ss-navbar__icon {
+    color: #30CAA1;
+    transform: scale(1.05);
+}
+
+.ss-navbar__item--active .ss-navbar__text {
+    color: #30CAA1;
+}
+
+.ss-navbar__icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+}
+
+.ss-navbar__icon {
+    width: 20px;
+    height: 20px;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.3s ease;
+}
+
+.ss-navbar__text {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    line-height: 1.2;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+.ss-navbar__item:hover .ss-navbar__icon {
+    color: #30CAA1;
+    transform: scale(1.1);
+}
+
+.ss-navbar__item:hover .ss-navbar__text {
+    color: #30CAA1;
+}
+
+@keyframes navbarItemPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+}
+
+/* Стили для выпадающего меню */
+.ss-navbar__item--dropdown {
+    position: relative;
+}
+
+.ss-navbar__dropdown-arrow {
+    width: 12px;
+    height: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-left: 4px;
+    transition: all 0.3s ease;
+}
+
+.ss-navbar__item--dropdown:hover .ss-navbar__dropdown-arrow {
+    color: #30CAA1;
+    transform: rotate(180deg);
+}
+
+.ss-navbar__dropdown-menu {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 8px 0;
+    margin-bottom: 8px;
+    min-width: 180px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-50%) translateY(10px);
+    transition: all 0.3s ease;
+    z-index: 1001;
+}
+
+.ss-navbar__item--dropdown:hover .ss-navbar__dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.ss-navbar__dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    border-radius: 8px;
+    margin: 0 8px;
+}
+
+.ss-navbar__dropdown-item:hover {
+    background: rgba(48, 202, 161, 0.1);
+    color: #30CAA1;
+    transform: translateX(4px);
+}
+
+.ss-navbar__dropdown-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+}
+
+.ss-navbar__dropdown-item:hover .ss-navbar__dropdown-icon {
+    color: #30CAA1;
+    transform: scale(1.1);
+}
+
+.ss-navbar__dropdown-item span {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* Отступы для контента */
+.content-with-navbar {
+    padding-top: 80px;
+    padding-bottom: 80px;
+    min-height: calc(100vh - 160px);
+}
+
+/* Дополнительные стили для исправления позиционирования */
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.page {
+    min-height: 100vh;
+    padding-bottom: 80px;
+    box-sizing: border-box;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .ss-header {
+        padding: 12px 15px;
+        height: 70px;
+    }
+    
+    .ss-header__title {
+        font-size: 20px;
+    }
+    
+    .ss-search-input {
+        width: 150px;
+        font-size: 13px;
+    }
+    
+    .ss-search-btn {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .ss-search-icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .content-with-navbar {
+        padding-top: 70px;
+        padding-bottom: 70px;
+    }
+}
+
+@media (max-width: 480px) {
+    .ss-header {
+        padding: 10px 12px;
+        height: 65px;
+    }
+    
+    .ss-header__title {
+        font-size: 18px;
+    }
+    
+    .ss-search-input {
+        width: 120px;
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+    
+    .ss-search-btn {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .ss-search-icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    .content-with-navbar {
+        padding-top: 65px;
+        padding-bottom: 65px;
+    }
+}
+
+/* Светлая тема (если нужно) */
+.light-theme .ss-header {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.light-theme .ss-header__title {
+    color: #333;
+}
+
+.light-theme .ss-search-input {
+    background: rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #333;
+}
+
+.light-theme .ss-search-input::placeholder {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+
+.light-theme .ss-navbar {
+    background: rgba(255, 255, 255, 0.95);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.light-theme .ss-navbar__icon {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.light-theme .ss-navbar__text {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+/* Специальные стили для секции статистики */
+.ss-navbar__item--stats {
+    position: relative;
+    overflow: hidden;
+}
+
+.ss-navbar__item--stats::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(48, 202, 161, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.ss-navbar__item--stats:hover::before {
+    left: 100%;
+}
+
+.ss-navbar__item--stats .ss-navbar__icon {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* Улучшенные стили для активной секции статистики */
+.ss-navbar__item--active.ss-navbar__item--stats {
+    background: linear-gradient(135deg, #30CAA1 0%, #20A0FF 100%);
+    box-shadow: 0 4px 16px rgba(48, 202, 161, 0.4);
+    transform: translateY(-2px);
+}
+
+.ss-navbar__item--active.ss-navbar__item--stats .ss-navbar__icon {
+    animation: none;
+    transform: scale(1.1);
+}
+
+.ss-navbar__item--active.ss-navbar__item--stats .ss-navbar__text {
+    font-weight: 600;
+}
+
+/* Медиа-запросы для адаптивности */
+@media (max-width: 768px) {
+    .ss-navbar__item--stats .ss-navbar__icon {
+        animation: none;
+    }
+
+    .ss-navbar {
+        bottom: 10px;
+        padding: 6px;
+        border-radius: 20px;
+        gap: 2px;
+    }
+
+    .ss-navbar__item {
+        padding: 8px 6px;
+        min-width: 48px;
+    }
+
+    .ss-navbar__icon {
+        width: 18px;
+        height: 18px;
+    }
+
+    .ss-navbar__text {
+        font-size: 9px;
+    }
+}
+
+@media (max-width: 480px) {
+    .ss-navbar__item {
+        min-width: 42px;
+        padding: 6px 4px;
+    }
+
+    .ss-navbar__text {
+        font-size: 8px;
+    }
+
+    .ss-navbar__icon {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+/* Анимация ripple для секции статистики */
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}

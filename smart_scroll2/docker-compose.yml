@@ -1,0 +1,18 @@
+services:
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.web
+    ports:
+      - "3000:80"
+    depends_on:
+      - cors-proxy
+    restart: unless-stopped
+
+  cors-proxy:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.proxy
+    ports:
+      - "3002:3002"
+    restart: unless-stopped
