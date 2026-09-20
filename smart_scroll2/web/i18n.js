@@ -121,7 +121,9 @@
     btn.className = 'i18n-toggle';
     btn.title = 'Switch language';
     btn.style.cssText = [
-      'position:fixed', 'top:12px', 'right:12px', 'z-index:2147483647',
+      // top:92px sits just below the 80px shared header so the toggle
+      // never overlaps the search/currency controls in ss-header__right.
+      'position:fixed', 'top:92px', 'right:12px', 'z-index:2147483647',
       'background:rgba(0,0,0,0.85)', 'color:#fff',
       'border:1px solid rgba(255,255,255,0.25)', 'border-radius:20px',
       'font:bold 12px/1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif',

@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Scroll - Вход</title>
+    <link rel="icon" type="image/png" href="template-logo.png">
     <link rel="stylesheet" href="template-styles.css">
     <link rel="stylesheet" href="auth-styles.css">
     
     <!-- Единая навигация -->
     <link rel="stylesheet" href="unified-navbar.css?v=2">
     <script src="unified-navbar.js?v=2"></script>
-    <script src="i18n.js?v=2" defer></script>
+    <script src="i18n.js?v=3" defer></script>
     
     <!-- Мониторинг яркости экрана -->
     <script src="brightness-monitor.js"></script>
@@ -66,7 +67,7 @@
     <!-- Загрузка единого навбара -->
     <script>
         // Загружаем единый навбар
-        fetch('unified-navbar.html?v=2')
+        fetch('unified-navbar.html?v=3')
             .then(response => response.text())
             .then(html => {
                 document.getElementById('unified-navbar-container').innerHTML = html;

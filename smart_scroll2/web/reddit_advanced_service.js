@@ -6,58 +6,12 @@
 
 class RedditAdvancedService {
     constructor() {
-        // TODO: не хранить Reddit client secret в клиентском коде — получать токен через свой сервер
-        this.clientId = '';
-        this.clientSecret = '';
         this.userAgent = 'smartscrolling/1.0';
-        this.accessToken = null;
-        this.tokenExpiry = null;
-        
+
         // Кэш для изображений
         this.imageCache = new Map();
-        
+
         console.log('🚀 RedditAdvancedService инициализирован (версия 2.0)');
-    }
-
-    /**
-     * Получение токена доступа через OAuth2 Client Credentials
-     */
-    async getAccessToken() {
-        // Проверяем, не истек ли токен
-        if (this.accessToken && this.tokenExpiry && Date.now() < this.tokenExpiry) {
-            console.log('✅ Используем существующий токен');
-            return this.accessToken;
-        }
-
-        console.log('🔑 Получаем новый токен доступа...');
-        
-        try {
-            const response = await fetch('https://www.reddit.com/api/v1/access_token', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': 'Basic ' + btoa(`${this.clientId}:${this.clientSecret}`),
-                    'User-Agent': this.userAgent
-                },
-                body: 'grant_type=client_credentials'
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            this.accessToken = data.access_token;
-            this.tokenExpiry = Date.now() + (data.expires_in * 1000) - 60000; // -1 минута для безопасности
-            
-            console.log('✅ Токен получен успешно');
-            return this.accessToken;
-            
-        } catch (error) {
-            console.error('❌ Ошибка получения токена:', error);
-            this.accessToken = 'public'; // Fallback к публичному API
-            return this.accessToken;
-        }
     }
 
     /**
@@ -76,9 +30,6 @@ class RedditAdvancedService {
         } = options;
 
         try {
-            // Получаем токен доступа
-            const token = await this.getAccessToken();
-            
             let url, headers, params;
 
             // Всегда используем публичный режим (более надежный)
@@ -103,7 +54,7 @@ class RedditAdvancedService {
             // Сначала пробуем CORS Proxy для Reddit API
             try {
                 console.log('🔄 Пробуем CORS Proxy для Reddit API...');
-                const corsProxyUrl = `http://localhost:3003/reddit/search.json?q=${encodeURIComponent(params.q)}&sort=${params.sort}&limit=${params.limit}&type=${params.type}&include_over_18=on&restrict_sr=off&t=all`;
+                const corsProxyUrl = `/reddit/search?q=${encodeURIComponent(params.q)}&sort=${params.sort}&limit=${params.limit}&type=${params.type}&include_over_18=on&restrict_sr=off&t=all`;
                 console.log('📍 URL для CORS Proxy:', corsProxyUrl);
                 
                 const response = await fetch(corsProxyUrl, {

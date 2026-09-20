@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Анализатор документов - Smart Scroll</title>
+    <link rel="icon" type="image/png" href="template-logo.png">
     <link rel="stylesheet" href="../templates/styles.css">
     <link rel="stylesheet" href="unified-navbar.css?v=2">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="unified-navbar.js?v=2"></script>
-    <script src="i18n.js?v=2" defer></script>
+    <script src="i18n.js?v=3" defer></script>
         <!-- Button Audio System -->
     <script src="button-audio.js"></script>
 <style>
@@ -365,7 +366,7 @@
     <script>
         class DocumentReader {
             constructor() {
-                this.apiKey = ''; // TODO: не хранить ключ OpenAI в клиентском коде — проксировать запрос через свой сервер
+                // AI-запросы идут через серверный прокси (cors-proxy.js /ai/chat) — ключ там, не здесь
                 this.extractedText = '';
                 this.initializeElements();
                 this.setupEventListeners();
@@ -551,22 +552,25 @@
             }
 
             async callOpenAI(question) {
-                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                const lang = (window.SmartScrollI18N && window.SmartScrollI18N.getLang) ? window.SmartScrollI18N.getLang() : 'ru';
+                const response = await fetch('/ai/chat', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${this.apiKey}`
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        model: 'gpt-3.5-turbo',
                         messages: [
                             {
                                 role: 'system',
-                                content: 'Вы - помощник, который отвечает на вопросы на основе предоставленного текста документа. Отвечайте точно и по существу.'
+                                content: lang === 'en'
+                                    ? 'You are an assistant that answers questions based on the provided document text. Answer accurately and to the point, in English.'
+                                    : 'Вы - помощник, который отвечает на вопросы на основе предоставленного текста документа. Отвечайте точно и по существу, на русском языке.'
                             },
                             {
                                 role: 'user',
-                                content: `Контекст документа:\n\n${this.extractedText}\n\nВопрос: ${question}`
+                                content: lang === 'en'
+                                    ? `Document context:\n\n${this.extractedText}\n\nQuestion: ${question}`
+                                    : `Контекст документа:\n\n${this.extractedText}\n\nВопрос: ${question}`
                             }
                         ],
                         max_tokens: 1000,
@@ -640,7 +644,7 @@
         }
 
         // Загружаем единый навбар
-        fetch('unified-navbar.html?v=2')
+        fetch('unified-navbar.html?v=3')
             .then(response => response.text())
             .then(html => {
                 document.getElementById('unified-navbar-container').innerHTML = html;

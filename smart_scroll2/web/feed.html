@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Scroll - Лента рекомендации</title>
+    <link rel="icon" type="image/png" href="template-logo.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="unified-navbar.css?v=2">
     <script src="unified-navbar.js?v=2"></script>
-    <script src="i18n.js?v=2" defer></script>
+    <script src="i18n.js?v=3" defer></script>
     
     <!-- Мониторинг яркости экрана -->
     <script src="brightness-monitor.js"></script>
@@ -498,7 +499,7 @@
     <!-- Загрузка единого навбара -->
     <script>
         // Загружаем единый навбар
-        fetch('unified-navbar.html?v=2')
+        fetch('unified-navbar.html?v=3')
             .then(response => response.text())
             .then(html => {
                 document.getElementById('unified-navbar-container').innerHTML = html;
@@ -514,9 +515,9 @@
 
     <script>
         // API ключи (не храните реальные ключи в репозитории)
-        const YOUTUBE_API_KEY = 'YOUR_YOUTUBE_API_KEY';
-        const OPENAI_API_KEY = 'YOUR_OPENAI_API_KEY';
-        
+        const YOUTUBE_API_KEY = 'AIzaSyBNS4Da0y7tWCdfMKP2HXbN7YDJkhIjgXY';
+        // AI-суммаризация и квизы идут через серверный прокси (cors-proxy.js /ai/chat) — ключ там, не здесь
+
         // Принудительный mock режим (для тестирования)
         const FORCE_MOCK_MODE = false;
         
@@ -1030,7 +1031,8 @@ ${data.points.map(point => `• ${point}`).join('\n')}
             
             // Show loading state
             if (panelBody) {
-                panelBody.innerHTML = '<p>🤖 Генерируем содержание видео...</p>';
+                panelBody.innerHTML = '<p data-i18n-en="Generating video summary...">Генерируем содержание видео...</p>';
+                if (window.SmartScrollI18N) window.SmartScrollI18N.refresh();
             }
             
             try {
@@ -1047,11 +1049,12 @@ ${data.points.map(point => `• ${point}`).join('\n')}
             } catch (error) {
                 console.error('Ошибка при генерации содержания:', error);
                 if (panelBody) {
-                    panelBody.innerHTML = '<p><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>Ошибка при генерации содержания. Попробуйте позже.</p>';
+                    panelBody.innerHTML = '<p><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg><span data-i18n-en="Failed to generate summary. Please try again later.">Ошибка при генерации содержания. Попробуйте позже.</span></p>';
+                    if (window.SmartScrollI18N) window.SmartScrollI18N.refresh();
                 }
             }
         }
-        
+
         async function loadQuizContent(videoIndex) {
             const videoSection = document.getElementById(`video-section-${videoIndex}`);
             const videoTitle = videoSection.querySelector('.video-title').textContent;
@@ -1060,7 +1063,8 @@ ${data.points.map(point => `• ${point}`).join('\n')}
             
             // Show loading state
             if (panelBody) {
-                panelBody.innerHTML = '<p><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>Генерируем квиз по видео...</p>';
+                panelBody.innerHTML = '<p><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg><span data-i18n-en="Generating video quiz...">Генерируем квиз по видео...</span></p>';
+                if (window.SmartScrollI18N) window.SmartScrollI18N.refresh();
             }
             
             try {
@@ -1082,21 +1086,56 @@ ${data.points.map(point => `• ${point}`).join('\n')}
                 
                 if (panelBody) {
                     panelBody.innerHTML = quiz;
+                    if (window.SmartScrollI18N) window.SmartScrollI18N.refresh();
                 }
             } catch (error) {
                 console.error('Ошибка при генерации квиза:', error);
                 if (panelBody) {
-                    panelBody.innerHTML = '<p><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>Ошибка при генерации квиза. Попробуйте позже.</p>';
+                    panelBody.innerHTML = '<p><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg><span data-i18n-en="Failed to generate quiz. Please try again later.">Ошибка при генерации квиза. Попробуйте позже.</span></p>';
+                    if (window.SmartScrollI18N) window.SmartScrollI18N.refresh();
                 }
             }
         }
         
+        function getUiLang() {
+            return (window.SmartScrollI18N && window.SmartScrollI18N.getLang) ? window.SmartScrollI18N.getLang() : 'ru';
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str == null ? '' : String(str);
+            return div.innerHTML;
+        }
+
         async function generateVideoSummaryWithOpenAI(videoContent) {
-            if (!OPENAI_API_KEY || OPENAI_API_KEY === 'YOUR_OPENAI_API_KEY' || OPENAI_API_KEY.startsWith('sk-your-')) {
-                throw new Error('OpenAI API ключ не настроен');
-            }
-            
-            const prompt = `Проанализируй это видео и создай структурированное содержание на русском языке:
+            const lang = getUiLang();
+            const prompt = lang === 'en' ? `Analyze this video and create a structured summary in English:
+
+${videoContent}
+
+Create the summary in this format:
+
+**Main topics:**
+• Topic 1
+• Topic 2
+• Topic 3
+
+**Key points:**
+• Key point 1
+• Key point 2
+• Key point 3
+
+**Practical tips:**
+• Tip 1
+• Tip 2
+• Tip 3
+
+**Useful links:**
+• Further resources
+• Documentation
+• Community
+
+Make the summary informative and useful for learning.` : `Проанализируй это видео и создай структурированное содержание на русском языке:
 
 ${videoContent}
 
@@ -1124,18 +1163,18 @@ ${videoContent}
 
 Сделай содержание информативным и полезным для изучения.`;
 
-                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                const response = await fetch('/ai/chat', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${OPENAI_API_KEY}`
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                    model: 'gpt-3.5-turbo',
                         messages: [
                             {
                                 role: 'system',
-                            content: 'Ты эксперт по анализу образовательного контента. Создавай структурированные и полезные содержания видео.'
+                            content: lang === 'en'
+                                ? 'You are an expert in analyzing educational content. Create structured, useful video summaries.'
+                                : 'Ты эксперт по анализу образовательного контента. Создавай структурированные и полезные содержания видео.'
                             },
                             {
                                 role: 'user',
@@ -1146,11 +1185,11 @@ ${videoContent}
                     temperature: 0.7
                     })
                 });
-                
+
                 if (!response.ok) {
-                throw new Error(`OpenAI API error: ${response.status}`);
+                throw new Error(`AI proxy error: ${response.status}`);
                 }
-                
+
                 const data = await response.json();
             return data.choices[0].message.content;
         }
@@ -1174,7 +1213,7 @@ ${videoContent}
             const transcriptUrl = `https://www.youtube.com/api/timedtext?v=${videoId}&lang=ru&fmt=json3`;
             
             try {
-                const response = await fetch(`http://localhost:3002/proxy?url=${encodeURIComponent(transcriptUrl)}`);
+                const response = await fetch(`/proxy?url=${encodeURIComponent(transcriptUrl)}`);
                 if (!response.ok) {
                     throw new Error('Транскрипт недоступен');
                 }
@@ -1194,47 +1233,41 @@ ${videoContent}
         }
         
         async function generateQuizWithOpenAI(videoContent) {
-            if (!OPENAI_API_KEY || OPENAI_API_KEY === 'YOUR_OPENAI_API_KEY' || OPENAI_API_KEY.startsWith('sk-your-')) {
-                throw new Error('OpenAI API ключ не настроен');
-            }
-            
-            const prompt = `На основе этого видео создай интерактивный квиз на русском языке:
+            const lang = getUiLang();
+            const prompt = lang === 'en' ? `Based on this video, create 5 quiz questions in English:
 
 ${videoContent}
 
-Создай 5 вопросов с 4 вариантами ответов каждый. Включи правильные ответы и объяснения.
+Each question needs exactly 4 answer options and one correct answer.
 
-Формат должен быть в HTML с интерактивными элементами:
+Respond with ONLY a valid JSON array, no markdown code fences, no text before or after it. Exact shape:
+[
+  {"question": "Question text", "options": ["Option A", "Option B", "Option C", "Option D"], "correctIndex": 0, "explanation": "Brief explanation of the correct answer"}
+]
+"correctIndex" is the 0-based index into "options".` : `На основе этого видео создай 5 вопросов для квиза на русском языке:
 
-<div class="quiz-container">
-    <h3>Вопрос 1:</h3>
-    <p>Текст вопроса</p>
-    <div class="quiz-options">
-        <label><input type="radio" name="q1" value="a"> A) Вариант A</label>
-        <label><input type="radio" name="q1" value="b"> B) Вариант B</label>
-        <label><input type="radio" name="q1" value="c"> C) Вариант C</label>
-        <label><input type="radio" name="q1" value="d"> D) Вариант D</label>
-    </div>
-    <div class="quiz-explanation" style="display:none;">
-        <strong>Правильный ответ:</strong> B<br>
-        <strong>Объяснение:</strong> Текст объяснения
-    </div>
-</div>
+${videoContent}
 
-Добавь кнопку "Проверить ответы" в конце с классом "quiz-check-btn".`;
+У каждого вопроса должно быть ровно 4 варианта ответа и один правильный.
 
-            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+Ответь ТОЛЬКО валидным JSON-массивом, без markdown-разметки, без текста до или после. Формат строго такой:
+[
+  {"question": "Текст вопроса", "options": ["Вариант A", "Вариант B", "Вариант C", "Вариант D"], "correctIndex": 0, "explanation": "Краткое объяснение правильного ответа"}
+]
+"correctIndex" — индекс правильного варианта в "options", начиная с 0.`;
+
+            const response = await fetch('/ai/chat', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${OPENAI_API_KEY}`
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    model: 'gpt-3.5-turbo',
                     messages: [
                         {
                             role: 'system',
-                            content: 'Ты эксперт по созданию образовательных квизов. Создавай качественные вопросы с правильными ответами и объяснениями.'
+                            content: lang === 'en'
+                                ? 'You generate quizzes. Respond with ONLY valid JSON — no markdown, no commentary.'
+                                : 'Ты генератор квизов. Отвечай ТОЛЬКО валидным JSON — без markdown и лишнего текста.'
                         },
                         {
                             role: 'user',
@@ -1247,122 +1280,71 @@ ${videoContent}
             });
 
             if (!response.ok) {
-                throw new Error(`OpenAI API error: ${response.status}`);
+                throw new Error(`AI proxy error: ${response.status}`);
             }
 
             const data = await response.json();
-            const quizHTML = data.choices[0].message.content;
-            
+            const questions = parseQuizJSON(data.choices[0].message.content);
+            const quizHTML = renderQuizHTML(questions);
+
             // Add event listener for check button after quiz is loaded
             setTimeout(() => {
-                addQuizEventListeners();
-                // Also add a global click handler as backup
-                document.addEventListener('click', handleQuizButtonClick);
-                // Add event delegation to panel body
-                const panelBody = document.getElementById('panelBody');
-                if (panelBody) {
-                    panelBody.addEventListener('click', function(event) {
-                        if (event.target.classList.contains('quiz-check-btn') || 
-                            event.target.textContent === 'Проверить ответы') {
-                            console.log('Quiz check button clicked via panel body delegation');
-                            checkQuizAnswers();
-                        }
-                    });
+                const checkBtn = document.querySelector('.quiz-check-btn');
+                if (checkBtn) {
+                    checkBtn.addEventListener('click', checkQuizAnswers);
                 }
             }, 100);
-            
+
             return quizHTML;
         }
-        
-        function addQuizEventListeners() {
-            // Remove existing listeners first
-            const existingBtn = document.querySelector('.quiz-check-btn');
-            if (existingBtn) {
-                existingBtn.removeEventListener('click', checkQuizAnswers);
+
+        function parseQuizJSON(raw) {
+            const cleaned = raw.trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '');
+            const questions = JSON.parse(cleaned);
+            if (!Array.isArray(questions) || questions.length === 0) {
+                throw new Error('Некорректный формат квиза от модели');
             }
-            
-            // Add new listener
-            const checkBtn = document.querySelector('.quiz-check-btn');
-            if (checkBtn) {
-                checkBtn.addEventListener('click', checkQuizAnswers);
-                console.log('Quiz check button event listener added');
-            } else {
-                console.log('Quiz check button not found');
-            }
+            return questions;
         }
-        
-        function handleQuizButtonClick(event) {
-            if (event.target.classList.contains('quiz-check-btn') || 
-                event.target.textContent === 'Проверить ответы') {
-                console.log('Quiz check button clicked via global handler');
-                checkQuizAnswers();
-            }
+
+        // Строим разметку сами (не доверяем LLM генерацию HTML/имён radio-групп) —
+        // это гарантирует уникальный name на каждый вопрос и надёжную проверку ответов.
+        function renderQuizHTML(questions) {
+            const letters = ['A', 'B', 'C', 'D'];
+            const questionsHTML = questions.map((q, qIndex) => `
+                <div class="quiz-container" data-correct="${q.correctIndex}">
+                    <h3><span data-i18n-en="Question">Вопрос</span> ${qIndex + 1}:</h3>
+                    <p>${escapeHtml(q.question)}</p>
+                    <div class="quiz-options">
+                        ${q.options.map((opt, oIndex) => `
+                            <label><input type="radio" name="q${qIndex}" value="${oIndex}"> ${letters[oIndex]}) ${escapeHtml(opt)}</label>
+                        `).join('')}
+                    </div>
+                    <div class="quiz-explanation" style="display:none;">
+                        <strong data-i18n-en="Correct answer:">Правильный ответ:</strong> ${letters[q.correctIndex]}<br>
+                        <strong data-i18n-en="Explanation:">Объяснение:</strong> ${escapeHtml(q.explanation)}
+                    </div>
+                </div>
+            `).join('');
+
+            return `${questionsHTML}<button class="quiz-check-btn" data-i18n-en="Check answers">Проверить ответы</button>`;
         }
         
         function checkQuizAnswers() {
-            console.log('checkQuizAnswers function called');
             const quizContainers = document.querySelectorAll('.quiz-container');
             let correctAnswers = 0;
-            let totalQuestions = quizContainers.length;
-            
-            console.log(`Found ${totalQuestions} quiz containers`);
-            
-            quizContainers.forEach((container, index) => {
-                const explanations = container.querySelectorAll('.quiz-explanation');
+            const totalQuestions = quizContainers.length;
+
+            quizContainers.forEach((container) => {
+                const explanation = container.querySelector('.quiz-explanation');
+                if (explanation) explanation.style.display = 'block';
+
                 const selectedAnswer = container.querySelector('input[type="radio"]:checked');
-                
-                console.log(`Question ${index + 1}: selected answer =`, selectedAnswer ? selectedAnswer.value : 'none');
-                
-                // Show all explanations
-                explanations.forEach(explanation => {
-                    explanation.style.display = 'block';
-                });
-                
-                // Check if answer is correct by comparing with explanation
-                if (selectedAnswer) {
-                    const explanation = container.querySelector('.quiz-explanation');
-                    if (explanation) {
-                        const explanationText = explanation.textContent;
-                        // Extract correct answer from explanation text
-                        const correctMatch = explanationText.match(/Правильный ответ[:\s]*([A-Da-d])/i);
-                        if (correctMatch) {
-                            const correctAnswer = correctMatch[1].toLowerCase();
-                            const userAnswer = selectedAnswer.value.toLowerCase();
-                            console.log(`Question ${index + 1}: user=${userAnswer}, correct=${correctAnswer}`);
-                            if (userAnswer === correctAnswer) {
-                                correctAnswers++;
-                                console.log(`Question ${index + 1}: CORRECT`);
-                            } else {
-                                console.log(`Question ${index + 1}: WRONG`);
-                            }
-                        } else {
-                            // Try alternative patterns for correct answer
-                            const altMatch1 = explanationText.match(/ответ[:\s]*([A-Da-d])/i);
-                            const altMatch2 = explanationText.match(/правильно[:\s]*([A-Da-d])/i);
-                            const altMatch3 = explanationText.match(/верно[:\s]*([A-Da-d])/i);
-                            
-                            const correctAnswer = altMatch1 ? altMatch1[1].toLowerCase() : 
-                                                altMatch2 ? altMatch2[1].toLowerCase() : 
-                                                altMatch3 ? altMatch3[1].toLowerCase() : null;
-                            
-                            if (correctAnswer) {
-                                const userAnswer = selectedAnswer.value.toLowerCase();
-                                console.log(`Question ${index + 1}: user=${userAnswer}, correct=${correctAnswer} (alt pattern)`);
-                                if (userAnswer === correctAnswer) {
-                                    correctAnswers++;
-                                    console.log(`Question ${index + 1}: CORRECT (alt pattern)`);
-                                } else {
-                                    console.log(`Question ${index + 1}: WRONG (alt pattern)`);
-                                }
-                            } else {
-                                console.log(`Question ${index + 1}: Could not find correct answer in explanation`);
-                                // If we can't determine the correct answer, don't count it as correct
-                            }
-                        }
-                    }
+                if (selectedAnswer && selectedAnswer.value === container.dataset.correct) {
+                    correctAnswers++;
                 }
             });
-            
+
             // Show results
             const resultDiv = document.createElement('div');
             resultDiv.className = 'quiz-results';
@@ -1375,27 +1357,28 @@ ${videoContent}
                 color: #FFFFFF;
                 text-align: center;
             `;
-            
+
             const percentage = Math.round((correctAnswers / totalQuestions) * 100);
             resultDiv.innerHTML = `
-                <h3>Результат квиза</h3>
-                <p>Правильных ответов: ${correctAnswers} из ${totalQuestions}</p>
-                <p>Процент: ${percentage}%</p>
-                ${percentage >= 80 ? '<p style="color: #30CAA1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Отлично!</p>' : 
-                  percentage >= 60 ? '<p style="color: #FFA500;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>Хорошо!</p>' : 
-                  '<p style="color: #FF6B6B;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Есть над чем поработать!</p>'}
+                <h3 data-i18n-en="Quiz Results">Результат квиза</h3>
+                <p><span data-i18n-en="Correct answers:">Правильных ответов:</span> ${correctAnswers} <span data-i18n-en="out of">из</span> ${totalQuestions}</p>
+                <p><span data-i18n-en="Score:">Процент:</span> ${percentage}%</p>
+                ${percentage >= 80 ? '<p style="color: #30CAA1;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span data-i18n-en="Excellent!">Отлично!</span></p>' :
+                  percentage >= 60 ? '<p style="color: #FFA500;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg><span data-i18n-en="Good!">Хорошо!</span></p>' :
+                  '<p style="color: #FF6B6B;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><span data-i18n-en="Room for improvement!">Есть над чем поработать!</span></p>'}
             `;
-            
+
             // Remove existing results
             const existingResults = document.querySelector('.quiz-results');
             if (existingResults) {
                 existingResults.remove();
             }
-            
+
             // Add new results
             const panelBody = document.getElementById('panelBody');
             if (panelBody) {
                 panelBody.appendChild(resultDiv);
+                if (window.SmartScrollI18N) window.SmartScrollI18N.refresh();
             }
         }
         
