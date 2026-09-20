@@ -7,6 +7,7 @@ services:
       - "3000:80"
     depends_on:
       - cors-proxy
+      - token-server
     restart: unless-stopped
 
   cors-proxy:
@@ -17,4 +18,14 @@ services:
       - .env
     ports:
       - "3002:3002"
+    restart: unless-stopped
+
+  token-server:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.token
+    env_file:
+      - .env
+    ports:
+      - "3007:3007"
     restart: unless-stopped

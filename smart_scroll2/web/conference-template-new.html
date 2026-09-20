@@ -715,7 +715,7 @@
                     // Попытка получения токена от сервера
                     let token;
                     try {
-                        const response = await fetch(`http://localhost:3007/token?identity=${encodeURIComponent(userName)}`);
+                        const response = await fetch(`/token?identity=${encodeURIComponent(userName)}`);
                         
                         if (!response.ok) {
                             throw new Error('Сервер токенов недоступен');

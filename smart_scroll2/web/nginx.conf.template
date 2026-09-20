@@ -31,4 +31,9 @@ server {
     location /proxy {
         proxy_pass http://${CORS_PROXY_HOST}:3002/proxy;
     }
+
+    # Twilio video access-token server — same relative-URL reasoning as above.
+    location /token {
+        proxy_pass http://${TOKEN_SERVER_HOST}:3007/token;
+    }
 }
