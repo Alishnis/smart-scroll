@@ -1,5 +1,9 @@
 server {
-    listen 80;
+    # Normally 80. Overridden to a non-privileged port when a TLS-terminating
+    # reverse proxy (e.g. Caddy, for getUserMedia's secure-context requirement
+    # on the Azure deployment) needs 80/443 for itself on the same network
+    # namespace and forwards to this port instead.
+    listen ${WEB_PORT};
     server_name _;
     root /usr/share/nginx/html;
     index index.html;

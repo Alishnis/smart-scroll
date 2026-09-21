@@ -1,0 +1,3 @@
+smartscroll-app.germanywestcentral.azurecontainer.io {
+	reverse_proxy localhost:8080
+}
