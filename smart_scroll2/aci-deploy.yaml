@@ -1,0 +1,85 @@
+# Azure Container Instances deployment template.
+#
+# All 4 containers share one network namespace (ACI has no inter-container
+# DNS), so they talk to each other over "localhost" — see CORS_PROXY_HOST /
+# TOKEN_SERVER_HOST below. Only Caddy is publicly exposed; it terminates TLS
+# and reverse-proxies to nginx on the internal WEB_PORT.
+#
+# Fill in the placeholder values from your own .env before running:
+#   az container create --resource-group <your-rg> --file aci-deploy.yaml
+apiVersion: 2021-09-01
+location: germanywestcentral
+name: smartscroll
+properties:
+  containers:
+    - name: cors-proxy
+      properties:
+        image: tmpalish/smartscroll-cors-proxy:latest
+        ports: []
+        resources:
+          requests:
+            cpu: 0.5
+            memoryInGb: 0.5
+        environmentVariables:
+          - name: REDDIT_CLIENT_ID
+            value: "your_reddit_client_id"
+          - name: REDDIT_USER_AGENT
+            value: "your_app_name/1.0"
+          - name: OPENROUTER_MODEL
+            value: "mistralai/mistral-nemo"
+          - name: REDDIT_CLIENT_SECRET
+            value: "your_reddit_client_secret"
+          - name: OPENROUTER_API_KEY
+            value: "your_openrouter_api_key"
+    - name: token-server
+      properties:
+        image: tmpalish/smartscroll-token-server:latest
+        ports: []
+        resources:
+          requests:
+            cpu: 0.5
+            memoryInGb: 0.5
+        environmentVariables:
+          - name: TWILIO_ACCOUNT_SID
+            value: "your_twilio_account_sid"
+          - name: TWILIO_API_KEY
+            value: "your_twilio_api_key"
+          - name: TWILIO_API_SECRET
+            value: "your_twilio_api_secret"
+    - name: web
+      properties:
+        image: tmpalish/smartscroll-web:latest
+        ports: []
+        resources:
+          requests:
+            cpu: 0.5
+            memoryInGb: 0.5
+        environmentVariables:
+          - name: CORS_PROXY_HOST
+            value: "localhost"
+          - name: TOKEN_SERVER_HOST
+            value: "localhost"
+          - name: WEB_PORT
+            value: "8080"
+    - name: caddy
+      properties:
+        image: tmpalish/smartscroll-caddy:latest
+        ports:
+          - port: 80
+            protocol: TCP
+          - port: 443
+            protocol: TCP
+        resources:
+          requests:
+            cpu: 0.5
+            memoryInGb: 0.5
+  osType: Linux
+  restartPolicy: Always
+  ipAddress:
+    type: Public
+    dnsNameLabel: smartscroll-app
+    ports:
+      - port: 80
+        protocol: TCP
+      - port: 443
+        protocol: TCP
