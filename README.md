@@ -2,8 +2,6 @@
 
 SmartScroll turns the endless-scroll feed people already spend hours on (YouTube + Reddit) into a study tool: it pulls in video and post content, generates AI summaries and quizzes, lets you take notes alongside it, and adds a video-conferencing room for group study — all as a plain static site with a couple of small backend services, containerized and deployed to the cloud.
 
-*[Русская версия](README.ru.md)*
-
 ---
 
 ## Screenshots
