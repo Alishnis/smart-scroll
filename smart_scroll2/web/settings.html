@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Настройки - SmartScroll</title>
+    <title>Settings - SmartScroll</title>
     <link rel="icon" type="image/png" href="template-logo.png">
     <link rel="stylesheet" href="template-styles.css">
     
@@ -701,7 +701,7 @@
             // Сохраняем настройки
             localStorage.setItem('accessibilitySettings', JSON.stringify(settings));
             
-            showNotification('Настройки доступности применены!', 'success');
+            showNotification('Accessibility settings applied!', 'success');
         }
         
         function applyAccessibilityStyles(settings) {
@@ -757,14 +757,14 @@
             if (settings.screenReader) {
                 document.querySelectorAll('button, input, select').forEach(element => {
                     if (!element.getAttribute('aria-label')) {
-                        element.setAttribute('aria-label', element.textContent || element.value || 'Элемент управления');
+                        element.setAttribute('aria-label', element.textContent || element.value || 'Control element');
                     }
                 });
             }
         }
         
         function resetAccessibilitySettings() {
-            if (confirm('Вы уверены, что хотите сбросить настройки доступности?')) {
+            if (confirm('Are you sure you want to reset accessibility settings?')) {
                 // Сбрасываем все переключатели
                 document.getElementById('screenReader').checked = false;
                 document.getElementById('highContrast').checked = false;
@@ -784,7 +784,7 @@
                 // Удаляем настройки из localStorage
                 localStorage.removeItem('accessibilitySettings');
                 
-                showNotification('Настройки доступности сброшены!', 'info');
+                showNotification('Accessibility settings reset!', 'info');
             }
         }
 
@@ -815,7 +815,7 @@
             // Сохраняем общие настройки
             localStorage.setItem('appSettings', JSON.stringify(settings));
             
-            showNotification('Настройки сохранены!', 'success');
+            showNotification('Settings saved!', 'success');
         }
 
         function loadSettings() {
@@ -845,11 +845,11 @@
         }
 
         function resetSettings() {
-            if (confirm('Вы уверены, что хотите сбросить все настройки?')) {
+            if (confirm('Are you sure you want to reset all settings?')) {
                 localStorage.removeItem('appSettings');
                 localStorage.removeItem('brightnessMonitorSettings');
                 loadSettings();
-                showNotification('Настройки сброшены!', 'info');
+                showNotification('Settings reset!', 'info');
             }
         }
 
@@ -864,7 +864,7 @@
             
             // Валидация значений
             if (settings.dangerBrightness >= settings.warningBrightness) {
-                showNotification('Порог опасности должен быть меньше порога предупреждения!', 'error');
+                showNotification('Danger threshold must be less than warning threshold!', 'error');
                 return;
             }
             
@@ -876,11 +876,11 @@
                 window.updateBrightnessEyeMonitoringSettings(settings);
             }
             
-            showNotification('Настройки яркости применены!', 'success');
+            showNotification('Brightness settings applied!', 'success');
         }
         
         function resetBrightnessSettings() {
-            if (confirm('Вы уверены, что хотите сбросить настройки яркости?')) {
+            if (confirm('Are you sure you want to reset brightness settings?')) {
                 // Сбрасываем к значениям по умолчанию
                 document.getElementById('dangerBrightness').value = 100;
                 document.getElementById('warningBrightness').value = 120;
@@ -890,7 +890,7 @@
                 // Удаляем настройки из localStorage
                 localStorage.removeItem('brightnessMonitorSettings');
                 
-                showNotification('Настройки яркости сброшены!', 'info');
+                showNotification('Brightness settings reset!', 'info');
             }
         }
         

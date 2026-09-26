@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Scroll - Статистика</title>
+    <title>Smart Scroll - Statistics</title>
     <link rel="icon" type="image/png" href="template-logo.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="unified-navbar.css?v=2">
@@ -583,7 +583,7 @@
                 if (timeElement) {
                     const hours = Math.floor(this.totalTime / (1000 * 60 * 60));
                     const minutes = Math.floor((this.totalTime % (1000 * 60 * 60)) / (1000 * 60));
-                    timeElement.textContent = `${hours}ч ${minutes}м`;
+                    timeElement.textContent = `${hours}h ${minutes}m`;
                 }
                 
                 if (pointsElement) {
@@ -623,10 +623,10 @@
                 if (statusDotElement && statusTextElement) {
                     if (this.isActive) {
                         statusDotElement.classList.remove('inactive');
-                        statusTextElement.textContent = 'Активен';
+                        statusTextElement.textContent = 'Active';
                     } else {
                         statusDotElement.classList.add('inactive');
-                        statusTextElement.textContent = 'Неактивен';
+                        statusTextElement.textContent = 'Inactive';
                     }
                 }
             }
@@ -636,14 +636,14 @@
                 
                 if (timeChangeElement && yesterdayData.time > 0) {
                     const timeChange = ((this.totalTime - yesterdayData.time) / yesterdayData.time * 100);
-                    const changeText = timeChange >= 0 ? `+${Math.round(timeChange)}% к вчера` : `${Math.round(timeChange)}% к вчера`;
+                    const changeText = timeChange >= 0 ? `+${Math.round(timeChange)}% vs yesterday` : `${Math.round(timeChange)}% vs yesterday`;
                     timeChangeElement.textContent = changeText;
                     timeChangeElement.className = `stat-card__change ${timeChange >= 0 ? 'stat-card__change--positive' : 'stat-card__change--negative'}`;
                 }
-                
+
                 if (pointsChangeElement && yesterdayData.points > 0) {
                     const pointsChange = ((this.points - yesterdayData.points) / yesterdayData.points * 100);
-                    const changeText = pointsChange >= 0 ? `+${Math.round(pointsChange)}% к вчера` : `${Math.round(pointsChange)}% к вчера`;
+                    const changeText = pointsChange >= 0 ? `+${Math.round(pointsChange)}% vs yesterday` : `${Math.round(pointsChange)}% vs yesterday`;
                     pointsChangeElement.textContent = changeText;
                     pointsChangeElement.className = `stat-card__change ${pointsChange >= 0 ? 'stat-card__change--positive' : 'stat-card__change--negative'}`;
                 }
@@ -656,7 +656,7 @@
                 if (progressBar && progressText) {
                     const progress = Math.min((this.points / 1000) * 100, 100); // 1000 очков = 100%
                     progressBar.style.width = `${progress}%`;
-                    progressText.textContent = `${this.points} / 1,000 очков (${Math.round(progress)}%)`;
+                    progressText.textContent = `${this.points} / 1,000 points (${Math.round(progress)}%)`;
                 }
             }
             
@@ -719,7 +719,7 @@
                 const weeklyStatsContainer = document.getElementById('weeklyStats');
                 if (!weeklyStatsContainer) return;
                 
-                const days = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+                const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                 const today = new Date();
                 const savedData = JSON.parse(localStorage.getItem('smartScrollStats') || '{}');
                 
@@ -733,7 +733,7 @@
                     
                     const hours = Math.floor(dayData.time / (1000 * 60 * 60));
                     const minutes = Math.floor((dayData.time % (1000 * 60 * 60)) / (1000 * 60));
-                    const timeStr = dayData.time > 0 ? `${hours}ч ${minutes}м` : '0ч 0м';
+                    const timeStr = dayData.time > 0 ? `${hours}h ${minutes}m` : '0h 0m';
                     
                     const isToday = i === 0;
                     const isActive = isToday && this.isActive;
@@ -757,7 +757,7 @@
                         const time = parseInt(this.dataset.time) || 0;
                         const points = parseInt(this.dataset.points) || 0;
                         
-                        showNotification(`${day}: ${value} активности, ${points} очков`);
+                        showNotification(`${day}: ${value} activity, ${points} points`);
                     });
                 });
             }
@@ -772,34 +772,34 @@
                 
                 // Проверяем достижения
                 if (this.points >= 1000) {
-                    achievements.push({ icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>', text: '1000+ очков', color: '#30CAA1' });
+                    achievements.push({ icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>', text: '1000+ points', color: '#30CAA1' });
                 }
                 if (this.points >= 500) {
-                    achievements.push({ icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>', text: '500+ очков', color: '#20A0FF' });
+                    achievements.push({ icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>', text: '500+ points', color: '#20A0FF' });
                 }
                 if (hours >= 4) {
-                    achievements.push({ icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>', text: '4+ часа активности', color: '#FF6B6B' });
+                    achievements.push({ icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>', text: '4+ hours active', color: '#FF6B6B' });
                 }
                 if (hours >= 2) {
-                    achievements.push({ icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 12c0-1.23-1.02-2.5-2.5-2.5s-2.5 1.27-2.5 2.5 1.02 2.5 2.5 2.5 2.5-1.27 2.5-2.5zm-2.5-1c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-7 1c0-1.23-1.02-2.5-2.5-2.5S4 10.77 4 12s1.02 2.5 2.5 2.5S9 13.23 9 12zm-2.5 0c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1z"/></svg>', text: '2+ часа активности', color: '#FFD93D' });
+                    achievements.push({ icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 12c0-1.23-1.02-2.5-2.5-2.5s-2.5 1.27-2.5 2.5 1.02 2.5 2.5 2.5 2.5-1.27 2.5-2.5zm-2.5-1c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-7 1c0-1.23-1.02-2.5-2.5-2.5S4 10.77 4 12s1.02 2.5 2.5 2.5S9 13.23 9 12zm-2.5 0c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1z"/></svg>', text: '2+ hours active', color: '#FFD93D' });
                 }
                 if (this.points >= 100) {
-                    achievements.push({ icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>', text: '100+ очков', color: '#6BCF7F' });
+                    achievements.push({ icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>', text: '100+ points', color: '#6BCF7F' });
                 }
                 if (minutes >= 30) {
-                    achievements.push({ icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>', text: '30+ минут', color: '#A8E6CF' });
+                    achievements.push({ icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>', text: '30+ minutes', color: '#A8E6CF' });
                 }
                 
                 // Проверяем стрик (дни подряд с активностью)
                 const streak = this.calculateStreak();
                 if (streak >= 7) {
-                    achievements.push({ icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 12c0-1.23-1.02-2.5-2.5-2.5s-2.5 1.27-2.5 2.5 1.02 2.5 2.5 2.5 2.5-1.27 2.5-2.5zm-2.5-1c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-7 1c0-1.23-1.02-2.5-2.5-2.5S4 10.77 4 12s1.02 2.5 2.5 2.5S9 13.23 9 12zm-2.5 0c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1z"/></svg>', text: `Стрик ${streak} дней`, color: '#FF6B6B' });
+                    achievements.push({ icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 12c0-1.23-1.02-2.5-2.5-2.5s-2.5 1.27-2.5 2.5 1.02 2.5 2.5 2.5 2.5-1.27 2.5-2.5zm-2.5-1c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-7 1c0-1.23-1.02-2.5-2.5-2.5S4 10.77 4 12s1.02 2.5 2.5 2.5S9 13.23 9 12zm-2.5 0c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1z"/></svg>', text: `${streak}-day streak`, color: '#FF6B6B' });
                 } else if (streak >= 3) {
-                    achievements.push({ icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 12c0-1.23-1.02-2.5-2.5-2.5s-2.5 1.27-2.5 2.5 1.02 2.5 2.5 2.5 2.5-1.27 2.5-2.5zm-2.5-1c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-7 1c0-1.23-1.02-2.5-2.5-2.5S4 10.77 4 12s1.02 2.5 2.5 2.5S9 13.23 9 12zm-2.5 0c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1z"/></svg>', text: `Стрик ${streak} дня`, color: '#FFD93D' });
+                    achievements.push({ icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 12c0-1.23-1.02-2.5-2.5-2.5s-2.5 1.27-2.5 2.5 1.02 2.5 2.5 2.5 2.5-1.27 2.5-2.5zm-2.5-1c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-7 1c0-1.23-1.02-2.5-2.5-2.5S4 10.77 4 12s1.02 2.5 2.5 2.5S9 13.23 9 12zm-2.5 0c0-.55.45-1 1-1s1 .45 1 1-.45 1-1 1-1-.45-1-1z"/></svg>', text: `${streak}-day streak`, color: '#FFD93D' });
                 }
-                
+
                 if (achievements.length === 0) {
-                    achievements.push({ icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>', text: 'Начните активность!', color: '#87CEEB' });
+                    achievements.push({ icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>', text: 'Get started!', color: '#87CEEB' });
                 }
                 
                 let html = '';
@@ -891,7 +891,7 @@
                     const day = this.querySelector('.daily-stat__day').textContent;
                     const value = this.querySelector('.daily-stat__value').textContent;
                     
-                    showNotification(`${day}: ${value} активности`);
+                    showNotification(`${day}: ${value} activity`);
                 });
             });
 

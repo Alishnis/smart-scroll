@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Scroll - Лента рекомендации</title>
+    <title>Smart Scroll - Recommended Feed</title>
     <link rel="icon" type="image/png" href="template-logo.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="unified-navbar.css?v=2">
@@ -539,7 +539,7 @@
         
         async function loadVideos(query) {
             const feedContainer = document.getElementById('feedContainer');
-            feedContainer.innerHTML = '<div class="loading"><div><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="animation: spin 1s linear infinite; margin-right: 8px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>Загружаем видео...</div></div>';
+            feedContainer.innerHTML = '<div class="loading"><div><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="animation: spin 1s linear infinite; margin-right: 8px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg><span data-i18n-en="Loading videos...">Загружаем видео...</span></div></div>';
 
             // Принудительный mock режим
             if (FORCE_MOCK_MODE) {
@@ -571,7 +571,7 @@
                 const searchData = await response.json();
                 
                 if (!searchData.items || searchData.items.length === 0) {
-                    feedContainer.innerHTML = '<div class="error"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>Видео не найдены</div>';
+                    feedContainer.innerHTML = '<div class="error"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg><span data-i18n-en="No videos found">Видео не найдены</span></div>';
                     return;
                 }
                 
@@ -598,20 +598,20 @@
                 console.error('Ошибка загрузки видео:', error);
                 
                 // Показываем более детальную информацию об ошибке
-                let errorMessage = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>Ошибка загрузки видео';
+                let errorMessage = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg><span data-i18n-en="Error loading videos">Ошибка загрузки видео</span>';
                 if (error.message.includes('400')) {
-                    errorMessage += '<br><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>Проблема с API ключом YouTube';
+                    errorMessage += '<br><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg><span data-i18n-en="Problem with the YouTube API key">Проблема с API ключом YouTube</span>';
                 } else if (error.message.includes('403')) {
                     if (error.message.includes('quota')) {
-                        errorMessage += '<br><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>Превышена квота YouTube API';
-                        errorMessage += '<br><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>Попробуйте позже или используйте другой API ключ';
+                        errorMessage += '<br><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg><span data-i18n-en="YouTube API quota exceeded">Превышена квота YouTube API</span>';
+                        errorMessage += '<br><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg><span data-i18n-en="Try again later or use a different API key">Попробуйте позже или используйте другой API ключ</span>';
                     } else {
-                        errorMessage += '<br><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg>Доступ запрещен к YouTube API';
+                        errorMessage += '<br><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z"/></svg><span data-i18n-en="Access denied to the YouTube API">Доступ запрещен к YouTube API</span>';
                     }
                 } else if (error.message.includes('CORS')) {
-                    errorMessage += '<br><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>Проблема с CORS';
+                    errorMessage += '<br><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg><span data-i18n-en="CORS issue">Проблема с CORS</span>';
                 } else {
-                    errorMessage += '<br><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>Проверьте подключение к интернету';
+                    errorMessage += '<br><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 8px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg><span data-i18n-en="Check your internet connection">Проверьте подключение к интернету</span>';
                 }
                 
                 feedContainer.innerHTML = `<div class="error">${errorMessage}</div>`;
@@ -625,7 +625,7 @@
         // Mock данные для демонстрации при превышении квоты
         function loadMockVideos(query) {
             const feedContainer = document.getElementById('feedContainer');
-            feedContainer.innerHTML = '<div class="loading"><div><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="animation: spin 1s linear infinite; margin-right: 8px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>Загружаем демо-видео...</div></div>';
+            feedContainer.innerHTML = '<div class="loading"><div><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="animation: spin 1s linear infinite; margin-right: 8px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg><span data-i18n-en="Loading demo videos...">Загружаем демо-видео...</span></div></div>';
             
             // Mock данные с популярными образовательными видео
             const mockVideos = [
@@ -672,9 +672,9 @@
             mockNotice.className = 'mock-notice';
             mockNotice.innerHTML = `
                 <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 10px; margin: 10px; border-radius: 5px; text-align: center;">
-                    <strong><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>Демо-режим</strong><br>
-                    YouTube API квота превышена. Показаны демонстрационные видео.<br>
-                    <small>Для реальных данных обновите API ключ в Google Cloud Console</small>
+                    <strong><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg><span data-i18n-en="Demo mode">Демо-режим</span></strong><br>
+                    <span data-i18n-en="YouTube API quota exceeded. Showing demo videos.">YouTube API квота превышена. Показаны демонстрационные видео.</span><br>
+                    <small data-i18n-en="For real data, update the API key in Google Cloud Console">Для реальных данных обновите API ключ в Google Cloud Console</small>
                 </div>
             `;
             feedContainer.innerHTML = '';
@@ -725,19 +725,19 @@
                                     <path d="M12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z" />
                                     <path fill-rule="evenodd" d="M1.5 12C1.5 5.385 6.385.5 13 .5S24.5 5.385 24.5 12 19.615 23.5 13 23.5 1.5 18.615 1.5 12ZM13 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Z" clip-rule="evenodd" />
                                 </svg>
-                                ${views} просмотров
+                                ${views} <span data-i18n-en="views">просмотров</span>
                         </div>
                             <div class="stat-item">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M7.493 18.75c-.425 0-.82-.236-.975-.632A7.48 7.48 0 0 1 6 15.375c0-1.75.599-3.358 1.602-4.634.151-.192.373-.309.6-.397.473-.183.89-.514 1.212-.924a9.042 9.042 0 0 1 2.861-2.4c.723-.384 1.35-.956 1.653-1.715a4.498 4.498 0 0 0 .322-1.672V3a.75.75 0 0 1 .75-.75 2.25 2.25 0 0 1 2.25 2.25c0 1.152-.26 2.243-.723 3.218-.266.558-.107 1.282.725 1.282h3.126c1.026 0 1.945.694 2.054 1.715.045.422.068.85.068 1.285a11.95 11.95 0 0 1-2.649 7.521c-.388.482-.987.729-1.605.729H14.23c-.483 0-.964-.078-1.423-.23l-3.114-1.04a4.501 4.501 0 0 0-1.423-.23h-.777ZM2.331 10.977a11.969 11.969 0 0 0-.831 4.398 12 12 0 0 0 .52 3.507c.26.85 1.084 1.368 1.973 1.368H4.9c.445 0 .72-.498.523-.898a8.963 8.963 0 0 1-.924-3.977c0-1.708.476-3.305 1.302-4.666.245-.403-.028-.959-.5-.959H4.25c-.832 0-1.612.453-1.918 1.227Z" />
                                 </svg>
-                                ${likes} лайков
+                                ${likes} <span data-i18n-en="likes">лайков</span>
                         </div>
                         </div>
                         <div class="video-actions">
                             <button class="action-btn" onclick="openOriginalVideo('${videoId}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;"><path d="M8 5v14l11-7z"/></svg>YouTube</button>
-                            <button class="action-btn" onclick="shareVideo('${videoId}', '${snippet.title}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>Поделиться</button>
-                            <button class="action-btn" onclick="getVideoSummary('${videoId}', '${snippet.title}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/></svg>Содержание</button>
+                            <button class="action-btn" onclick="shareVideo('${videoId}', '${snippet.title}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg><span data-i18n-en="Share">Поделиться</span></button>
+                            <button class="action-btn" onclick="getVideoSummary('${videoId}', '${snippet.title}')"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right: 4px;"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/></svg><span data-i18n-en="Summary">Содержание</span></button>
                         </div>
                         </div>
                         </div>
@@ -785,7 +785,7 @@
             const searchInput = document.getElementById('searchInput');
             if (!searchInput) {
                 console.error('Поле поиска не найдено');
-                alert('Ошибка: поле поиска не найдено');
+                alert(getUiLang() === 'en' ? 'Error: search field not found' : 'Ошибка: поле поиска не найдено');
                 return;
             }
             
@@ -796,7 +796,7 @@
             
             if (!query) {
                 console.log('❌ Запрос пустой');
-                alert('Пожалуйста, введите запрос для поиска');
+                alert(getUiLang() === 'en' ? 'Please enter a search query' : 'Пожалуйста, введите запрос для поиска');
                 return;
             }
             
@@ -846,7 +846,7 @@
             } else {
                 // Fallback - копируем в буфер обмена
                 navigator.clipboard.writeText(youtubeUrl).then(() => {
-                    alert('Ссылка скопирована в буфер обмена!');
+                    alert(getUiLang() === 'en' ? 'Link copied to clipboard!' : 'Ссылка скопирована в буфер обмена!');
                 });
             }
         }
@@ -859,13 +859,55 @@
                     displaySummary(summary);
             } catch (error) {
                 console.error('Ошибка получения содержания:', error);
-                alert('Ошибка получения содержания видео');
+                alert(getUiLang() === 'en' ? 'Error getting video summary' : 'Ошибка получения содержания видео');
             }
         }
         
         // Генерация структурированного демонстрационного содержания
         function generateStructuredSummary(title) {
-            const topics = {
+            const lang = getUiLang();
+            const topics = lang === 'en' ? {
+                'programming': {
+                    main: 'Programming and development',
+                    points: [
+                        'Programming fundamentals and algorithms',
+                        'Data structures and their applications',
+                        'Object-oriented programming',
+                        'Practical projects and case studies',
+                        'Best development practices'
+                    ]
+                },
+                'javascript': {
+                    main: 'JavaScript development',
+                    points: [
+                        'JavaScript syntax and fundamentals',
+                        'DOM manipulation and events',
+                        'Asynchronous programming',
+                        'Modern frameworks (React, Vue)',
+                        'Testing and debugging'
+                    ]
+                },
+                'python': {
+                    main: 'Python programming',
+                    points: [
+                        'Python fundamentals and syntax',
+                        'Working with data and libraries',
+                        'Web development with Django/Flask',
+                        'Machine learning and AI',
+                        'Automation and scripting'
+                    ]
+                },
+                'tutorial': {
+                    main: 'Educational content',
+                    points: [
+                        'Step-by-step instructions',
+                        'Practical examples',
+                        'Tips and recommendations',
+                        'Common mistakes and how to fix them',
+                        'Additional resources'
+                    ]
+                }
+            } : {
                 'programming': {
                     main: 'Программирование и разработка',
                     points: [
@@ -907,7 +949,7 @@
                     ]
                 }
             };
-            
+
             // Определяем тему на основе заголовка
             let topic = 'programming';
             const titleLower = title.toLowerCase();
@@ -915,10 +957,24 @@
             else if (titleLower.includes('python')) topic = 'python';
             else if (titleLower.includes('web') || titleLower.includes('веб')) topic = 'web';
             else if (titleLower.includes('tutorial')) topic = 'tutorial';
-            
+
             const data = topics[topic];
-            
-            return `**${data.main}**
+
+            return lang === 'en' ? `**${data.main}**
+
+**Main topics:**
+${data.points.map(point => `• ${point}`).join('\n')}
+
+**Key takeaways:**
+• Practical approach to learning
+• Modern technologies and tools
+• Real-world projects and case studies
+• Industry best practices
+
+**Useful links:**
+• Documentation and resources
+• Additional materials
+• Developer community` : `**${data.main}**
 
 **Основные темы:**
 ${data.points.map(point => `• ${point}`).join('\n')}
@@ -984,7 +1040,7 @@ ${data.points.map(point => `• ${point}`).join('\n')}
             
             // Update panel content based on type
             if (panelType === 'summary') {
-                panelTitle.textContent = 'Содержание';
+                panelTitle.textContent = getUiLang() === 'en' ? 'Summary' : 'Содержание';
                 panelIcon.innerHTML = `
                     <path fill-rule="evenodd" d="M5.625 1.5c-1.036 0-1.875.84-1.875 1.875v17.25c0 1.035.84 1.875 1.875 1.875h12.75c1.035 0 1.875-.84 1.875-1.875V12.75A3.75 3.75 0 0 0 16.5 9h-1.875a1.875 1.875 0 0 1-1.875-1.875V5.25A3.75 3.75 0 0 0 9 1.5H5.625ZM7.5 15a.75.75 0 0 1 .75-.75h7.5a.75.75 0 0 1 0 1.5h-7.5A.75.75 0 0 1 7.5 15Zm.75 2.25a.75.75 0 0 0 0 1.5H12a.75.75 0 0 0 0-1.5H8.25Z" clip-rule="evenodd" />
                     <path d="M12.971 1.816A5.23 5.23 0 0 1 14.25 5.25v1.875c0 .207.168.375.375.375H16.5a5.23 5.23 0 0 1 3.434 1.279 9.768 9.768 0 0 0-6.963-6.963Z" />
@@ -993,13 +1049,13 @@ ${data.points.map(point => `• ${point}`).join('\n')}
                 globalPanel.classList.add('active');
                 loadSummaryContent(videoIndex);
             } else if (panelType === 'notes') {
-                panelTitle.textContent = 'Заметки';
+                panelTitle.textContent = getUiLang() === 'en' ? 'Notes' : 'Заметки';
                 panelIcon.innerHTML = `
                     <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
                 `;
-                panelBody.innerHTML = '<textarea placeholder="Добавьте свои заметки к этому видео..."></textarea>';
+                panelBody.innerHTML = '<textarea data-i18n-en-placeholder="Add your notes for this video..." placeholder="Добавьте свои заметки к этому видео..."></textarea>';
             } else if (panelType === 'quiz') {
-                panelTitle.textContent = 'Квиз';
+                panelTitle.textContent = getUiLang() === 'en' ? 'Quiz' : 'Квиз';
                 panelIcon.innerHTML = `
                     <path d="M16.5 6a3 3 0 0 0-3-3H6a3 3 0 0 0-3 3v7.5a3 3 0 0 0 3 3v-6A4.5 4.5 0 0 1 10.5 6h6Z" />
                     <path d="M18 7.5a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-7.5a3 3 0 0 1-3-3v-7.5a3 3 0 0 1 3-3H18Z" />
@@ -1251,9 +1307,9 @@ Each question needs exactly 4 answer options and one correct answer.
 
 Respond with ONLY a valid JSON array, no markdown code fences, no text before or after it. Exact shape:
 [
-  {"question": "Question text", "options": ["Option A", "Option B", "Option C", "Option D"], "correctIndex": 0, "explanation": "Brief explanation of the correct answer"}
+  {"question": "Question text", "options": ["Option A", "Option B", "Option C", "Option D"], "correctAnswer": "Option A", "explanation": "Brief explanation of the correct answer"}
 ]
-"correctIndex" is the 0-based index into "options".` : `На основе этого видео создай 5 вопросов для квиза на русском языке:
+"correctAnswer" must be copied EXACTLY (character-for-character) from one of the strings in "options" — do not paraphrase it and do not use an index or letter.` : `На основе этого видео создай 5 вопросов для квиза на русском языке:
 
 ${videoContent}
 
@@ -1261,9 +1317,9 @@ ${videoContent}
 
 Ответь ТОЛЬКО валидным JSON-массивом, без markdown-разметки, без текста до или после. Формат строго такой:
 [
-  {"question": "Текст вопроса", "options": ["Вариант A", "Вариант B", "Вариант C", "Вариант D"], "correctIndex": 0, "explanation": "Краткое объяснение правильного ответа"}
+  {"question": "Текст вопроса", "options": ["Вариант A", "Вариант B", "Вариант C", "Вариант D"], "correctAnswer": "Вариант A", "explanation": "Краткое объяснение правильного ответа"}
 ]
-"correctIndex" — индекс правильного варианта в "options", начиная с 0.`;
+"correctAnswer" должен ТОЧНО (посимвольно) совпадать с одной из строк в "options" — не перефразируй его и не указывай индекс или букву.`;
 
             const response = await fetch('/ai/chat', {
                 method: 'POST',

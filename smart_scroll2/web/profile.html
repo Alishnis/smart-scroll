@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Scroll - Профиль</title>
+    <title>Smart Scroll - Profile</title>
     <link rel="icon" type="image/png" href="template-logo.png">
     <link rel="stylesheet" href="template-styles.css">
     <link rel="stylesheet" href="auth-styles.css">
@@ -524,8 +524,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width: 20px; height: 20px; margin-right: 8px; vertical-align: middle;">
                             <path d="M19 7h-3V6a4 4 0 0 0-8 0v1H5a1 1 0 0 0-1 1v11a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V8a1 1 0 0 0-1-1zM10 6a2 2 0 0 1 4 0v1h-4V6zm8 13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V9h2v1a1 1 0 0 0 2 0V9h4v1a1 1 0 0 0 2 0V9h2v10z"/>
                         </svg>
-                        У вас пока нет достижений<br>
-                        Заработайте Smart очки в квизах и купите их в магазине!
+                        <span data-i18n-en-html="You don't have any achievements yet.<br>Earn Smart points in quizzes and buy them in the shop!">У вас пока нет достижений<br>Заработайте Smart очки в квизах и купите их в магазине!</span>
                     </div>
                 `;
                 return;
@@ -540,7 +539,7 @@
                 achievementCard.innerHTML = `
                     <div class="achievement-icon">${item.icon}</div>
                     <div class="achievement-name">${item.name}</div>
-                    <div class="achievement-type">${getTypeLabel(item.type)}</div>
+                    <div class="achievement-type"><span data-i18n-en="${getTypeLabelEn(item.type)}">${getTypeLabel(item.type)}</span></div>
                     <div class="achievement-price">${item.price} Smart</div>
                 `;
 
@@ -554,6 +553,16 @@
                 'badge': 'Значок',
                 'title': 'Титул',
                 'effect': 'Эффект'
+            };
+            return labels[type] || type;
+        }
+
+        function getTypeLabelEn(type) {
+            const labels = {
+                'achievement': 'Achievement',
+                'badge': 'Badge',
+                'title': 'Title',
+                'effect': 'Effect'
             };
             return labels[type] || type;
         }

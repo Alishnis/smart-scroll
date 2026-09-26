@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Scroll - Видеоконференции</title>
+    <title>Smart Scroll - Video Conferencing</title>
     <link rel="icon" type="image/png" href="template-logo.png">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
@@ -626,7 +626,7 @@
             
             initializeApp() {
                 this.setupEventListeners();
-                this.updateConnectionStatus('Не подключен', 'disconnected');
+                this.updateConnectionStatus('Not connected', 'disconnected');
             }
             
             setupEventListeners() {
@@ -710,7 +710,7 @@
             async joinRoom(roomName, userName) {
                 try {
                     console.log(`🚪 Подключение к комнате: ${roomName}`);
-                    this.updateConnectionStatus('Подключение...', 'connecting');
+                    this.updateConnectionStatus('Connecting...', 'connecting');
                     
                     // Попытка получения токена от сервера
                     let token;
@@ -727,7 +727,7 @@
                         console.warn('⚠️ Сервер токенов недоступен, используем демо-режим');
                         // Используем простой токен для тестирования
                         token = 'demo-token-' + Date.now();
-                        this.updateConnectionStatus('Демо-режим', 'connecting');
+                        this.updateConnectionStatus('Demo mode', 'connecting');
                         
                         // Показываем сообщение о демо-режиме
                         alert('Сервер токенов недоступен. Работаем в демо-режиме. Для полноценной работы запустите сервер токенов на порту 3007.');
@@ -756,13 +756,13 @@
                     
                 } catch (error) {
                     console.error('❌ Ошибка подключения к комнате:', error);
-                    this.updateConnectionStatus('Ошибка подключения', 'error');
+                    this.updateConnectionStatus('Connection error', 'error');
                     
                     // Показываем более информативное сообщение
                     if (error.message.includes('Failed to fetch')) {
                         alert('Сервер конференций недоступен. Проверьте, что сервер запущен на порту 3007.');
                     } else {
-                        alert(`Не удалось подключиться к комнате: ${error.message}`);
+                        alert(`Failed to connect to the room: ${error.message}`);
                     }
                 }
             }
@@ -779,7 +779,7 @@
                     
                     console.log('✅ Подключен к комнате:', this.room.name);
                         this.isConnected = true;
-                        this.updateConnectionStatus('Подключен', 'connected');
+                        this.updateConnectionStatus('Connected', 'connected');
                         this.updateRoomInfo(roomName, userName);
                     
                     // Сохранить локальный видео трек
@@ -1011,7 +1011,7 @@
             handleRoomDisconnected(room, error) {
                 console.log('Отключен от комнаты:', error);
                 this.isConnected = false;
-                this.updateConnectionStatus('Отключен', 'disconnected');
+                this.updateConnectionStatus('Disconnected', 'disconnected');
                 
                 // Очистить интерфейс
                 document.getElementById('conferenceSection').classList.add('hidden');
@@ -1032,7 +1032,7 @@
             updateConnectionStatus(status, type) {
                 const statusElement = document.getElementById('connectionStatus');
                 if (statusElement) {
-                    statusElement.innerHTML = `<strong>Статус:</strong> ${status}`;
+                    statusElement.innerHTML = `<strong>Status:</strong> ${status}`;
                     statusElement.className = `conference-status ${type}`;
                 }
                 console.log(`🔗 Статус подключения: ${status} (${type})`);
@@ -1429,7 +1429,7 @@
                     }
                     
                     this.isConnected = false;
-                    this.updateConnectionStatus('Отключен', 'disconnected');
+                    this.updateConnectionStatus('Disconnected', 'disconnected');
                     document.getElementById('conferenceSection').classList.add('hidden');
                     document.getElementById('leaveRoomBtn').classList.add('hidden');
                     document.getElementById('roomInfo').classList.add('hidden');

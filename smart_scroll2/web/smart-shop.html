@@ -147,6 +147,10 @@
             color: white;
             padding: 5px 12px;
             border-radius: 15px;
+        }
+
+        html[lang="en"] .shop-item.owned::before {
+            content: '✓ OWNED';
             font-size: 12px;
             font-weight: bold;
         }
@@ -411,11 +415,11 @@
                 // Fallback - создаем простой навбар
                 document.getElementById('unified-navbar-container').innerHTML = `
                     <div style="position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.9); padding: 10px 20px; border-radius: 20px; z-index: 1000;">
-                        <a href="feed.html" style="color: white; margin: 0 10px;">Лента</a>
-                        <a href="posts.html" style="color: white; margin: 0 10px;">Посты</a>
-                        <a href="smart-shop.html" style="color: #30CAA1; margin: 0 10px;">Магазин</a>
-                        <a href="settings.html" style="color: white; margin: 0 10px;">Настройки</a>
-                        <a href="profile.html" style="color: white; margin: 0 10px;">Профиль</a>
+                        <a href="feed.html" style="color: white; margin: 0 10px;" data-i18n-en="Feed">Лента</a>
+                        <a href="posts.html" style="color: white; margin: 0 10px;" data-i18n-en="Posts">Посты</a>
+                        <a href="smart-shop.html" style="color: #30CAA1; margin: 0 10px;" data-i18n-en="Shop">Магазин</a>
+                        <a href="settings.html" style="color: white; margin: 0 10px;" data-i18n-en="Settings">Настройки</a>
+                        <a href="profile.html" style="color: white; margin: 0 10px;" data-i18n-en="Profile">Профиль</a>
                     </div>
                 `;
             });
@@ -667,6 +671,16 @@
             return labels[type] || type;
         }
 
+        function getTypeLabelEn(type) {
+            const labels = {
+                'achievement': 'Achievement',
+                'badge': 'Badge',
+                'title': 'Title',
+                'effect': 'Effect'
+            };
+            return labels[type] || type;
+        }
+
         function filterItems(category) {
             const allItems = JSON.parse(localStorage.getItem('shopItems') || '[]');
             let filteredItems = allItems;
@@ -680,22 +694,22 @@
 
         function purchaseItem(itemId) {
             if (!window.SmartCurrency) {
-                alert('Система Smart Currency не инициализирована');
+                alert('Smart Currency system is not initialized');
                 return;
             }
 
             const allItems = JSON.parse(localStorage.getItem('shopItems') || '[]');
             const item = allItems.find(i => i.id === itemId);
-            
+
             if (!item) {
-                alert('Товар не найден');
+                alert('Item not found');
                 return;
             }
 
             const currentBalance = window.SmartCurrency.getPoints();
-            
+
             if (currentBalance < item.price) {
-                alert('Недостаточно Smart очков для покупки');
+                alert('Not enough Smart points to buy this');
                 return;
             }
 
@@ -714,7 +728,7 @@
                 
                 console.log(`✅ Куплен товар: ${item.name} за ${item.price} Smart очков`);
             } else {
-                alert('Ошибка при покупке товара');
+                alert('Error while purchasing item');
             }
         }
 
@@ -745,11 +759,11 @@
             inventory.forEach(item => {
                 const itemElement = document.createElement('div');
                 itemElement.className = 'inventory-item';
-                
+
                 itemElement.innerHTML = `
                     <div class="item-icon">${item.icon}</div>
-                    <h4>${item.name}</h4>
-                    <p>${getTypeLabel(item.type)}</p>
+                    <h4 data-i18n-en="${item.nameEn || item.name}">${item.name}</h4>
+                    <p data-i18n-en="${getTypeLabelEn(item.type)}">${getTypeLabel(item.type)}</p>
                 `;
 
                 inventoryGrid.appendChild(itemElement);
@@ -775,8 +789,8 @@
                 <div class="purchase-content">
                     <div class="purchase-icon">${item.icon}</div>
                     <div class="purchase-text">
-                        <div class="purchase-title">Покупка успешна!</div>
-                        <div class="purchase-item">${item.name}</div>
+                        <div class="purchase-title" data-i18n-en="Purchase successful!">Покупка успешна!</div>
+                        <div class="purchase-item" data-i18n-en="${item.nameEn || item.name}">${item.name}</div>
                     </div>
                 </div>
             `;

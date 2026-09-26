@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Генератор флешкарт - SmartScroll</title>
+    <title>Flashcard Generator - SmartScroll</title>
     <link rel="icon" type="image/png" href="template-logo.png">
     <link rel="stylesheet" href="unified-navbar.css?v=2">
     <link rel="stylesheet" href="styles.css">
@@ -996,7 +996,7 @@
             ];
             
             if (!allowedTypes.includes(file.type) && !file.name.endsWith('.md')) {
-                alert('Неподдерживаемый тип файла. Пожалуйста, выберите PDF, TXT, DOC, DOCX или MD файл.');
+                alert('Unsupported file type. Please choose a PDF, TXT, DOC, DOCX or MD file.');
                 return;
             }
             
@@ -1025,7 +1025,7 @@
                     content: null,
                     size: file.size
                 };
-                showMaterialPreview('Файл загружен. Для обработки PDF и DOC файлов требуется дополнительная настройка сервера.');
+                showMaterialPreview('File uploaded. Processing PDF and DOC files requires additional server setup.');
             }
         }
         
@@ -1082,12 +1082,12 @@
             const text = textInput.value.trim();
             
             if (!text) {
-                alert('Пожалуйста, введите текст для создания флешкарт.');
+                alert('Please enter text to create flashcards.');
                 return;
             }
-            
+
             if (text.length < 50) {
-                alert('Текст слишком короткий. Пожалуйста, введите более подробный материал (минимум 50 символов).');
+                alert('Text is too short. Please enter a more detailed material (minimum 50 characters).');
                 return;
             }
             
@@ -1166,7 +1166,7 @@
         
         async function generateFlashcards() {
             if (!uploadedMaterial) {
-                alert('Пожалуйста, сначала загрузите материал для изучения.');
+                alert('Please upload material to study first.');
                 return;
             }
             
@@ -1198,7 +1198,7 @@
                 
             } catch (error) {
                 console.error('Ошибка генерации флешкарт:', error);
-                alert('Произошла ошибка при генерации флешкарт. Попробуйте еще раз.');
+                alert('An error occurred while generating flashcards. Please try again.');
             } finally {
                 // Скрываем индикатор загрузки
                 generateBtn.disabled = false;
@@ -1225,37 +1225,37 @@
                 sampleFlashcards = [
                     {
                         id: 1,
-                        question: "Что такое машинное обучение?",
-                        answer: "Машинное обучение — это раздел искусственного интеллекта, который позволяет компьютерам учиться и принимать решения без явного программирования.",
-                        category: "ИИ",
+                        question: "What is machine learning?",
+                        answer: "Machine learning is a branch of artificial intelligence that allows computers to learn and make decisions without explicit programming.",
+                        category: "AI",
                         difficulty: settings.difficulty
                     },
                     {
                         id: 2,
-                        question: "Какие основные типы машинного обучения существуют?",
-                        answer: "1) Обучение с учителем (supervised learning)\n2) Обучение без учителя (unsupervised learning)\n3) Обучение с подкреплением (reinforcement learning)",
-                        category: "ИИ",
+                        question: "What are the main types of machine learning?",
+                        answer: "1) Supervised learning\n2) Unsupervised learning\n3) Reinforcement learning",
+                        category: "AI",
                         difficulty: settings.difficulty
                     },
                     {
                         id: 3,
-                        question: "Что такое нейронная сеть?",
-                        answer: "Нейронная сеть — это вычислительная модель, вдохновленная биологическими нейронными сетями, состоящая из взаимосвязанных узлов (нейронов).",
-                        category: "Нейросети",
+                        question: "What is a neural network?",
+                        answer: "A neural network is a computational model inspired by biological neural networks, consisting of interconnected nodes (neurons).",
+                        category: "Neural networks",
                         difficulty: settings.difficulty
                     },
                     {
                         id: 4,
-                        question: "Объясните принцип работы алгоритма градиентного спуска",
-                        answer: "Градиентный спуск — это алгоритм оптимизации, который итеративно корректирует параметры модели в направлении, противоположном градиенту функции потерь.",
-                        category: "Алгоритмы",
+                        question: "Explain how the gradient descent algorithm works",
+                        answer: "Gradient descent is an optimization algorithm that iteratively adjusts model parameters in the direction opposite to the gradient of the loss function.",
+                        category: "Algorithms",
                         difficulty: settings.difficulty
                     },
                     {
                         id: 5,
-                        question: "Что такое переобучение (overfitting)?",
-                        answer: "Переобучение происходит, когда модель слишком хорошо запоминает обучающие данные и плохо обобщает на новые данные.",
-                        category: "Проблемы",
+                        question: "What is overfitting?",
+                        answer: "Overfitting occurs when a model memorizes the training data too well and generalizes poorly to new data.",
+                        category: "Issues",
                         difficulty: settings.difficulty
                     }
                 ];
@@ -1285,9 +1285,9 @@
                     
                     flashcards.push({
                         id: index + 1,
-                        question: `Что говорится о "${keyWord}" в тексте?`,
+                        question: `What does the text say about "${keyWord}"?`,
                         answer: sentence.trim() + '.',
-                        category: "Текст",
+                        category: "Text",
                         difficulty: settings.difficulty
                     });
                 }
@@ -1298,9 +1298,9 @@
                 uniqueWords.slice(0, parseInt(settings.cardCount) - flashcards.length).forEach((word, index) => {
                     flashcards.push({
                         id: flashcards.length + index + 1,
-                        question: `Что означает "${word}" в контексте данного текста?`,
-                        answer: `"${word}" - ключевое понятие из текста, которое требует дополнительного изучения.`,
-                        category: "Термины",
+                        question: `What does "${word}" mean in the context of this text?`,
+                        answer: `"${word}" is a key concept from the text that requires further study.`,
+                        category: "Terms",
                         difficulty: settings.difficulty
                     });
                 });
@@ -1403,23 +1403,23 @@
             generatedFlashcards = [
                 {
                     id: 1,
-                    question: "Что такое JavaScript?",
-                    answer: "JavaScript - это язык программирования, который используется для создания интерактивных веб-страниц.",
-                    category: "Программирование",
+                    question: "What is JavaScript?",
+                    answer: "JavaScript is a programming language used to create interactive web pages.",
+                    category: "Programming",
                     difficulty: "beginner"
                 },
                 {
                     id: 2,
-                    question: "Как объявить переменную в JavaScript?",
-                    answer: "В JavaScript можно объявить переменную с помощью ключевых слов: var, let или const.",
-                    category: "Программирование",
+                    question: "How do you declare a variable in JavaScript?",
+                    answer: "In JavaScript you can declare a variable using the keywords: var, let or const.",
+                    category: "Programming",
                     difficulty: "beginner"
                 },
                 {
                     id: 3,
-                    question: "Что такое функция в программировании?",
-                    answer: "Функция - это блок кода, который выполняет определенную задачу и может быть вызван многократно.",
-                    category: "Программирование",
+                    question: "What is a function in programming?",
+                    answer: "A function is a block of code that performs a specific task and can be called multiple times.",
+                    category: "Programming",
                     difficulty: "intermediate"
                 }
             ];
@@ -1431,8 +1431,8 @@
         function editCard(cardId) {
             const card = generatedFlashcards.find(c => c.id === cardId);
             if (card) {
-                const newQuestion = prompt('Вопрос:', card.question);
-                const newAnswer = prompt('Ответ:', card.answer);
+                const newQuestion = prompt('Question:', card.question);
+                const newAnswer = prompt('Answer:', card.answer);
                 
                 if (newQuestion && newAnswer) {
                     card.question = newQuestion;
@@ -1443,7 +1443,7 @@
         }
         
         function deleteCard(cardId) {
-            if (confirm('Вы уверены, что хотите удалить эту карточку?')) {
+            if (confirm('Are you sure you want to delete this card?')) {
                 generatedFlashcards = generatedFlashcards.filter(c => c.id !== cardId);
                 displayFlashcards();
             }
@@ -1453,7 +1453,7 @@
         
         async function startNlpQuiz() {
             if (!uploadedMaterial) {
-                alert('Пожалуйста, сначала загрузите материал для изучения.');
+                alert('Please upload material to study first.');
                 return;
             }
             
@@ -1479,7 +1479,7 @@
             
             const materialContent = uploadedMaterial.content;
             if (!materialContent) {
-                alert('Нет материала для анализа.');
+                alert('No material to analyze.');
                 return;
             }
             
@@ -1509,10 +1509,10 @@
                     questions.push({
                         id: index + 1,
                         type: 'comprehension',
-                        question: `Что говорится о "${keyWord}" в данном материале?`,
+                        question: `What does this material say about "${keyWord}"?`,
                         options: generateQuestionOptions(sentence, keyWord),
                         correctAnswer: 0,
-                        explanation: `В тексте говорится: "${sentence.trim()}"`,
+                        explanation: `The text says: "${sentence.trim()}"`,
                         source: 'comprehension'
                     });
                 }
@@ -1523,10 +1523,10 @@
                 questions.push({
                     id: questions.length + 1,
                     type: 'definition',
-                    question: `Что означает термин "${word}" в контексте данного материала?`,
+                    question: `What does the term "${word}" mean in the context of this material?`,
                     options: generateDefinitionOptions(word, text),
                     correctAnswer: 0,
-                    explanation: `"${word}" - ключевое понятие, которое требует понимания в контексте материала.`,
+                    explanation: `"${word}" is a key concept that requires understanding in the context of the material.`,
                     source: 'definition'
                 });
             });
@@ -1543,10 +1543,10 @@
         
         function generateQuestionOptions(sentence, keyWord) {
             const options = [
-                sentence.trim() + '.', // Правильный ответ
-                `Информация о "${keyWord}" не упоминается в материале.`,
-                `"${keyWord}" упоминается только в контексте других тем.`,
-                `Детальная информация о "${keyWord}" отсутствует.`
+                sentence.trim() + '.', // Correct answer
+                `Information about "${keyWord}" is not mentioned in the material.`,
+                `"${keyWord}" is only mentioned in the context of other topics.`,
+                `Detailed information about "${keyWord}" is missing.`
             ];
             
             // Перемешиваем варианты ответов
@@ -1555,10 +1555,10 @@
         
         function generateDefinitionOptions(word, text) {
             const options = [
-                `"${word}" - ключевое понятие из материала, требующее понимания.`,
-                `"${word}" - второстепенный термин, не требующий внимания.`,
-                `"${word}" - устаревшее понятие, не актуальное для изучения.`,
-                `"${word}" - технический термин, не связанный с основной темой.`
+                `"${word}" is a key concept from the material that requires understanding.`,
+                `"${word}" is a minor term that does not require attention.`,
+                `"${word}" is an outdated concept, not relevant for study.`,
+                `"${word}" is a technical term unrelated to the main topic.`
             ];
             
             return shuffleArray(options);
@@ -1587,7 +1587,7 @@
             // Обновляем прогресс
             const progress = ((currentQuestionIndex + 1) / nlpQuizQuestions.length) * 100;
             progressFill.style.width = progress + '%';
-            progressText.textContent = `Вопрос ${currentQuestionIndex + 1} из ${nlpQuizQuestions.length}`;
+            progressText.textContent = `Question ${currentQuestionIndex + 1} of ${nlpQuizQuestions.length}`;
             
             // Отображаем вопрос
             questionContainer.innerHTML = `
@@ -1625,7 +1625,7 @@
         function submitAnswer() {
             const selectedOption = document.querySelector('.question-option.selected');
             if (!selectedOption) {
-                alert('Пожалуйста, выберите вариант ответа.');
+                alert('Please select an answer option.');
                 return;
             }
             
@@ -1674,7 +1674,7 @@
                 font-size: 14px;
                 line-height: 1.5;
             `;
-            explanation.innerHTML = `<strong>Объяснение:</strong> ${question.explanation}`;
+            explanation.innerHTML = `<strong>Explanation:</strong> ${question.explanation}`;
             questionContainer.appendChild(explanation);
         }
         
@@ -1721,7 +1721,7 @@
                 id: index + 1,
                 question: question.question,
                 answer: question.options[question.correctAnswer],
-                category: question.type === 'comprehension' ? 'Понимание' : 'Термины',
+                category: question.type === 'comprehension' ? 'Comprehension' : 'Terms',
                 difficulty: 'intermediate',
                 source: 'nlp-quiz'
             }));

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Здоровье глаз - SmartScroll</title>
+    <title>Eye Health - SmartScroll</title>
     <link rel="icon" type="image/png" href="template-logo.png">
     
     <!-- Единая навигация -->
@@ -506,16 +506,17 @@
         // Функции напоминаний
         function toggleReminder() {
             const service = window.eyeHealthService;
+            const btn = document.getElementById('startReminderBtn');
             if (service.isActive) {
                 service.stopReminders();
-                document.getElementById('startReminderBtn').textContent = 'Запустить напоминания';
-                document.getElementById('startReminderBtn').classList.remove('danger');
+                btn.textContent = 'Start reminders';
+                btn.classList.remove('danger');
             } else {
                 // Обновляем настройки перед запуском
                 updateServiceSettings();
                 service.startReminders();
-                document.getElementById('startReminderBtn').textContent = 'Остановить напоминания';
-                document.getElementById('startReminderBtn').classList.add('danger');
+                btn.textContent = 'Stop reminders';
+                btn.classList.add('danger');
             }
         }
 
@@ -569,14 +570,14 @@
 
         // Статистика
         function resetStats() {
-            if (confirm('Вы уверены, что хотите сбросить всю статистику?')) {
+            if (confirm('Are you sure you want to reset all statistics?')) {
                 const service = window.eyeHealthService;
                 if (service) {
                     service.dailyStats = {};
                     service.saveDailyStats();
                     service.updateStatsDisplay();
                 }
-                alert('Статистика сброшена!');
+                alert('Statistics reset!');
             }
         }
 
@@ -601,7 +602,7 @@
                 service.breakDuration = settings.breakDuration;
             }
             
-            alert('Настройки сохранены!');
+            alert('Settings saved!');
         }
 
         function loadSettings() {

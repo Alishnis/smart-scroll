@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Анализатор документов - Smart Scroll</title>
+    <title>Document Analyzer - Smart Scroll</title>
     <link rel="icon" type="image/png" href="template-logo.png">
     <link rel="stylesheet" href="../templates/styles.css">
     <link rel="stylesheet" href="unified-navbar.css?v=2">
@@ -432,7 +432,7 @@
             showFileInfo(file) {
                 this.fileName.textContent = file.name;
                 this.fileSize.textContent = this.formatFileSize(file.size);
-                this.fileType.textContent = file.type || 'Неизвестный тип';
+                this.fileType.textContent = file.type || 'Unknown type';
                 this.fileInfo.style.display = 'block';
             }
 
@@ -446,7 +446,7 @@
 
             async extractTextFromFile(file) {
                 try {
-                    this.showLoading('Извлечение текста...');
+                    this.showLoading('Extracting text...');
                     
                     const fileExtension = file.name.split('.').pop().toLowerCase();
                     
@@ -455,15 +455,15 @@
                     } else if (fileExtension === 'docx' || fileExtension === 'doc') {
                         await this.extractFromWord(file);
                     } else {
-                        throw new Error('Неподдерживаемый формат файла');
+                        throw new Error('Unsupported file format');
                     }
                     
                     this.hideLoading();
-                    this.showSuccess('Текст успешно извлечен из документа!');
+                    this.showSuccess('Text successfully extracted from the document!');
                     
                 } catch (error) {
                     this.hideLoading();
-                    this.showError('Ошибка при извлечении текста: ' + error.message);
+                    this.showError('Error extracting text: ' + error.message);
                 }
             }
 
@@ -524,18 +524,18 @@
 
             async askQuestion() {
                 if (!this.extractedText) {
-                    this.showError('Сначала загрузите и извлеките текст из документа');
+                    this.showError('First upload and extract text from a document');
                     return;
                 }
 
                 const question = this.questionInput.value.trim();
                 if (!question) {
-                    this.showError('Пожалуйста, введите вопрос');
+                    this.showError('Please enter a question');
                     return;
                 }
 
                 try {
-                    this.showLoading('Получение ответа от ИИ...');
+                    this.showLoading('Getting answer from AI...');
                     this.askButton.disabled = true;
 
                     const response = await this.callOpenAI(question);
@@ -546,7 +546,7 @@
                     
                 } catch (error) {
                     this.hideLoading();
-                    this.showError('Ошибка при получении ответа: ' + error.message);
+                    this.showError('Error getting the answer: ' + error.message);
                     this.askButton.disabled = false;
                 }
             }
@@ -580,7 +580,7 @@
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(errorData.error?.message || 'Ошибка API');
+                    throw new Error(errorData.error?.message || 'API error');
                 }
 
                 const data = await response.json();
@@ -637,9 +637,8 @@
             const query = searchInput.value.trim();
             
             if (query) {
-                console.log('Поиск:', query);
-                // Здесь можно добавить логику поиска
-                alert('Функция поиска: ' + query);
+                console.log('Search:', query);
+                alert('Search: ' + query);
             }
         }
 
