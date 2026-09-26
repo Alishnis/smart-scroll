@@ -234,7 +234,7 @@ class BrightnessMonitor {
     showDangerNotification(brightness) {
         this.notification.innerHTML = `
             <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="font-size: 24px;">⚠️</div>
+                <div style="font-size: 24px;"><i class="fa-solid fa-triangle-exclamation"></i></div>
                 <div>
                     <div style="font-size: 16px; font-weight: bold;">ОПАСНОСТЬ!</div>
                     <div style="font-size: 14px; opacity: 0.9;">Слишком близко к экрану!</div>
@@ -249,7 +249,7 @@ class BrightnessMonitor {
     showWarningNotification(brightness) {
         this.notification.innerHTML = `
             <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="font-size: 24px;">👁️</div>
+                <div style="font-size: 24px;"><i class="fa-solid fa-eye"></i></div>
                 <div>
                     <div style="font-size: 16px; font-weight: bold;">Предупреждение</div>
                     <div style="font-size: 14px; opacity: 0.9;">Близко к экрану</div>
@@ -275,7 +275,7 @@ class BrightnessMonitor {
         
         this.notification.innerHTML = `
             <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="font-size: 20px;">ℹ️</div>
+                <div style="font-size: 20px;"><i class="fa-solid fa-circle-info"></i></div>
                 <div style="font-size: 14px;">${message}</div>
             </div>
         `;

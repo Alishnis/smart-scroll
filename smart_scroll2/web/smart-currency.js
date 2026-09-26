@@ -95,14 +95,14 @@ class SmartCurrency {
                 id: 'smart_collector',
                 title: 'Собиратель Smart',
                 description: 'Заработали 100 Smart очков',
-                icon: '💰',
+                icon: '<i class="fa-solid fa-sack-dollar"></i>',
                 requirement: 100
             },
             {
                 id: 'smart_master',
                 title: 'Мастер Smart',
                 description: 'Заработали 500 Smart очков',
-                icon: '👑',
+                icon: '<i class="fa-solid fa-crown"></i>',
                 requirement: 500
             },
             {

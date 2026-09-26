@@ -463,7 +463,7 @@ class EyeMonitor {
     showDangerNotification(distance) {
         this.notification.innerHTML = `
             <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="font-size: 24px;">⚠️</div>
+                <div style="font-size: 24px;"><i class="fa-solid fa-triangle-exclamation"></i></div>
                 <div>
                     <div style="font-size: 16px; margin-bottom: 5px;">ОПАСНОСТЬ!</div>
                     <div style="font-size: 12px; opacity: 0.9;">Расстояние: ${distance}см</div>
@@ -479,7 +479,7 @@ class EyeMonitor {
     showWarningNotification(distance) {
         this.notification.innerHTML = `
             <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="font-size: 24px;">👁️</div>
+                <div style="font-size: 24px;"><i class="fa-solid fa-eye"></i></div>
                 <div>
                     <div style="font-size: 16px; margin-bottom: 5px;">Предупреждение</div>
                     <div style="font-size: 12px; opacity: 0.9;">Расстояние: ${distance}см</div>
@@ -506,7 +506,7 @@ class EyeMonitor {
         
         this.notification.innerHTML = `
             <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="font-size: 20px;">${type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️'}</div>
+                <div style="font-size: 20px;">${type === 'error' ? '<i class="fa-solid fa-circle-xmark" style="color: #FF6B6B"></i>' : type === 'success' ? '<i class="fa-solid fa-circle-check" style="color: #30CAA1"></i>' : '<i class="fa-solid fa-circle-info"></i>'}</div>
                 <div>${message}</div>
             </div>
         `;

@@ -6,6 +6,7 @@
     <title>Flashcard Generator - SmartScroll</title>
     <link rel="icon" type="image/png" href="template-logo.png">
     <link rel="stylesheet" href="unified-navbar.css?v=2">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     
     <!-- Button Audio System -->
@@ -696,22 +697,22 @@
         <div class="flashcard-generator">
             <!-- Секция загрузки материала -->
             <div class="upload-section">
-                <h2 data-i18n-en="📚 Upload material to study">📚 Загрузите материал для изучения</h2>
+                <h2><i class="fa-solid fa-book"></i> <span data-i18n-en="Upload material to study">Загрузите материал для изучения</span></h2>
 
                 <!-- Вкладки для выбора способа ввода -->
                 <div class="input-tabs">
-                    <button class="input-tab active" onclick="switchInputMode('file')" data-i18n-en="📁 Upload file">
-                        📁 Загрузить файл
+                    <button class="input-tab active" onclick="switchInputMode('file')">
+                        <i class="fa-solid fa-folder"></i> <span data-i18n-en="Upload file">Загрузить файл</span>
                     </button>
-                    <button class="input-tab" onclick="switchInputMode('text')" data-i18n-en="✏️ Enter text">
-                        ✏️ Ввести текст
+                    <button class="input-tab" onclick="switchInputMode('text')">
+                        <i class="fa-solid fa-pencil"></i> <span data-i18n-en="Enter text">Ввести текст</span>
                     </button>
                 </div>
 
                 <!-- Секция загрузки файла -->
                 <div class="file-input-section active" id="fileInputSection">
                     <div class="upload-area" id="uploadArea">
-                        <div class="upload-icon">📄</div>
+                        <div class="upload-icon"><i class="fa-solid fa-file"></i></div>
                         <div class="upload-text" data-i18n-en="Drag a file here or click to select">Перетащите файл сюда или нажмите для выбора</div>
                         <div class="upload-subtext" data-i18n-en="Supported: PDF, TXT, DOC, DOCX, MD">Поддерживаются: PDF, TXT, DOC, DOCX, MD</div>
                         <input type="file" id="fileInput" class="file-input" accept=".pdf,.txt,.doc,.docx,.md">
@@ -730,11 +731,11 @@
                         data-i18n-en-placeholder="Enter or paste text to create flashcards. You can paste text from any source: textbooks, articles, lectures, notes, etc."
                     ></textarea>
                     <div class="text-input-actions">
-                        <button class="text-input-btn secondary" onclick="clearTextInput()" data-i18n-en="🗑️ Clear">
-                            🗑️ Очистить
+                        <button class="text-input-btn secondary" onclick="clearTextInput()">
+                            <i class="fa-solid fa-trash"></i> <span data-i18n-en="Clear">Очистить</span>
                         </button>
-                        <button class="text-input-btn" onclick="processTextInput()" data-i18n-en="✅ Use text">
-                            ✅ Использовать текст
+                        <button class="text-input-btn" onclick="processTextInput()">
+                            <i class="fa-solid fa-circle-check"></i> <span data-i18n-en="Use text">Использовать текст</span>
                         </button>
                     </div>
                 </div>
@@ -747,7 +748,7 @@
             
             <!-- Секция настроек генерации -->
             <div class="generate-section">
-                <h2 data-i18n-en="⚙️ Flashcard generation settings">⚙️ Настройки генерации флешкарт</h2>
+                <h2><i class="fa-solid fa-gear"></i> <span data-i18n-en="Flashcard generation settings">Настройки генерации флешкарт</span></h2>
                 <div class="generate-options">
                     <div class="option-group">
                         <label for="cardCount" data-i18n-en="Number of cards">Количество карточек</label>
@@ -790,26 +791,26 @@
                 </div>
 
                 <button class="generate-btn" id="generateBtn" onclick="generateFlashcards()">
-                    <span id="generateText" data-i18n-en="🎯 Generate flashcards">🎯 Сгенерировать флешкарты</span>
+                    <span id="generateText"><i class="fa-solid fa-bullseye"></i> <span data-i18n-en="Generate flashcards">Сгенерировать флешкарты</span></span>
                     <div class="loading-spinner" id="loadingSpinner" style="display: none;"></div>
                 </button>
 
                 <!-- Кнопка для тестирования -->
-                <button class="generate-btn" onclick="testFlashcards()" style="margin-top: 10px; background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);" data-i18n-en="🧪 Test flashcards">
-                    🧪 Тестовые флешкарты
+                <button class="generate-btn" onclick="testFlashcards()" style="margin-top: 10px; background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);" >
+                    <i class="fa-solid fa-flask"></i> <span data-i18n-en="Test flashcards">Тестовые флешкарты</span>
                 </button>
             </div>
             
             <!-- Секция NLP квиза -->
             <div class="nlp-quiz-section">
-                <h2 data-i18n-en="🧠 NLP Quiz on the material">🧠 NLP Квиз по материалу</h2>
+                <h2><i class="fa-solid fa-brain"></i> <span data-i18n-en="NLP Quiz on the material">NLP Квиз по материалу</span></h2>
                 <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 20px;" data-i18n-en="An interactive quiz that analyzes your material with NLP and creates smart questions">
                     Интерактивный квиз, который анализирует ваш материал с помощью NLP и создает умные вопросы
                 </p>
 
                 <div class="nlp-quiz-controls">
-                    <button class="generate-btn" id="startNlpQuizBtn" onclick="startNlpQuiz()" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);" data-i18n-en="🧠 Start NLP quiz">
-                        🧠 Начать NLP квиз
+                    <button class="generate-btn" id="startNlpQuizBtn" onclick="startNlpQuiz()" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);" >
+                        <i class="fa-solid fa-brain"></i> <span data-i18n-en="Start NLP quiz">Начать NLP квиз</span>
                     </button>
                 </div>
 
@@ -826,13 +827,13 @@
                     </div>
 
                     <div class="quiz-actions">
-                        <button class="quiz-btn secondary" onclick="skipQuestion()" data-i18n-en="⏭️ Skip">⏭️ Пропустить</button>
-                        <button class="quiz-btn" onclick="submitAnswer()" id="submitBtn" data-i18n-en="✅ Answer">✅ Ответить</button>
+                        <button class="quiz-btn secondary" onclick="skipQuestion()"><i class="fa-solid fa-forward-step"></i> <span data-i18n-en="Skip">Пропустить</span></button>
+                        <button class="quiz-btn" onclick="submitAnswer()" id="submitBtn"><i class="fa-solid fa-circle-check"></i> <span data-i18n-en="Answer">Ответить</span></button>
                     </div>
                 </div>
 
                 <div class="quiz-results" id="quizResults" style="display: none;">
-                    <h3 data-i18n-en="🎯 Quiz results">🎯 Результаты квиза</h3>
+                    <h3><i class="fa-solid fa-bullseye"></i> <span data-i18n-en="Quiz results">Результаты квиза</span></h3>
                     <div class="results-stats">
                         <div class="stat-item">
                             <span class="stat-label" data-i18n-en="Correct answers:">Правильных ответов:</span>
@@ -848,18 +849,18 @@
                         </div>
                     </div>
                     <div class="results-actions">
-                        <button class="quiz-btn" onclick="restartQuiz()" data-i18n-en="🔄 Try again">🔄 Пройти еще раз</button>
-                        <button class="quiz-btn secondary" onclick="generateFlashcardsFromQuiz()" data-i18n-en="🃏 Create flashcards">🃏 Создать флешкарты</button>
+                        <button class="quiz-btn" onclick="restartQuiz()"><i class="fa-solid fa-arrows-rotate"></i> <span data-i18n-en="Try again">Пройти еще раз</span></button>
+                        <button class="quiz-btn secondary" onclick="generateFlashcardsFromQuiz()"><i class="fa-solid fa-clone"></i> <span data-i18n-en="Create flashcards">Создать флешкарты</span></button>
                     </div>
                 </div>
             </div>
 
             <!-- Секция отображения флешкарт -->
             <div class="flashcards-section">
-                <h2 data-i18n-en="🃏 Your flashcards">🃏 Ваши флешкарты</h2>
+                <h2><i class="fa-solid fa-clone"></i> <span data-i18n-en="Your flashcards">Ваши флешкарты</span></h2>
                 <div class="flashcards-grid" id="flashcardsGrid">
                     <div class="no-flashcards" id="noFlashcards">
-                        <div class="no-flashcards-icon">🃏</div>
+                        <div class="no-flashcards-icon"><i class="fa-solid fa-clone"></i></div>
                         <div data-i18n-en="Upload material and generate flashcards">Загрузите материал и сгенерируйте флешкарты</div>
                     </div>
                 </div>
@@ -1105,7 +1106,7 @@
             showMaterialPreview(text);
             
             // Показываем уведомление об успехе
-            showNotification('✅ Текст успешно загружен! Теперь вы можете сгенерировать флешкарты.', 'success');
+            showNotification('<i class="fa-solid fa-circle-check"></i> Text uploaded successfully! Now you can generate flashcards.', 'success');
         }
         
         // Очистка текстового ввода
@@ -1139,7 +1140,7 @@
                 max-width: 300px;
                 animation: slideIn 0.3s ease;
             `;
-            notification.textContent = message;
+            notification.innerHTML = message;
             
             // Добавляем анимацию
             const style = document.createElement('style');
@@ -1335,11 +1336,11 @@
                                 </div>
                             </div>
                             <div class="flashcard-actions">
-                                <button class="flashcard-action" onclick="editCard(${card.id})" title="Редактировать">
-                                    ✏️
+                                <button class="flashcard-action" onclick="editCard(${card.id})" title="Редактировать" data-i18n-en-title="Edit">
+                                    <i class="fa-solid fa-pencil"></i>
                                 </button>
-                                <button class="flashcard-action" onclick="deleteCard(${card.id})" title="Удалить">
-                                    🗑️
+                                <button class="flashcard-action" onclick="deleteCard(${card.id})" title="Удалить" data-i18n-en-title="Delete">
+                                    <i class="fa-solid fa-trash"></i>
                                 </button>
                             </div>
                         </div>
@@ -1381,11 +1382,11 @@
                         </div>
                     </div>
                     <div class="flashcard-actions">
-                        <button class="flashcard-action" onclick="editCard(${card.id})" title="Редактировать">
-                            ✏️
+                        <button class="flashcard-action" onclick="editCard(${card.id})" title="Редактировать" data-i18n-en-title="Edit">
+                            <i class="fa-solid fa-pencil"></i>
                         </button>
-                        <button class="flashcard-action" onclick="deleteCard(${card.id})" title="Удалить">
-                            🗑️
+                        <button class="flashcard-action" onclick="deleteCard(${card.id})" title="Удалить" data-i18n-en-title="Delete">
+                            <i class="fa-solid fa-trash"></i>
                         </button>
                     </div>
                 </div>
@@ -1423,9 +1424,9 @@
                     difficulty: "intermediate"
                 }
             ];
-            
+
             displayFlashcards();
-            showNotification('🧪 Тестовые флешкарты созданы!', 'success');
+            showNotification('<i class="fa-solid fa-flask"></i> Test flashcards created!', 'success');
         }
         
         function editCard(cardId) {
@@ -1698,11 +1699,11 @@
             // Показываем уведомление о результате
             let message = '';
             if (percentage >= 80) {
-                message = '🎉 Отличный результат! Вы хорошо усвоили материал!';
+                message = '<i class="fa-solid fa-champagne-glasses"></i> Great result! You have mastered the material well!';
             } else if (percentage >= 60) {
-                message = '👍 Хороший результат! Есть что улучшить.';
+                message = '<i class="fa-solid fa-thumbs-up"></i> Good result! There is room for improvement.';
             } else {
-                message = '📚 Рекомендуем повторить материал для лучшего понимания.';
+                message = '<i class="fa-solid fa-book"></i> We recommend reviewing the material for better understanding.';
             }
             
             showNotification(message, 'success');
@@ -1732,7 +1733,7 @@
             // Отображаем флешкарты
             displayFlashcards();
             
-            showNotification('🃏 Флешкарты созданы на основе квиза!', 'success');
+            showNotification('<i class="fa-solid fa-clone"></i> Flashcards created from the quiz!', 'success');
         }
         
     </script>

@@ -9,6 +9,7 @@
     
     <!-- Единая навигация -->
     <link rel="stylesheet" href="unified-navbar.css?v=2">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="unified-navbar.js?v=2"></script>
     <script src="i18n.js?v=3" defer></script>
     
@@ -432,7 +433,7 @@
             <div class="main-content">
                 <!-- Shop Header -->
                 <div class="shop-header">
-                    <h1>🛒 Smart Shop</h1>
+                    <h1><i class="fa-solid fa-cart-shopping"></i> Smart Shop</h1>
                     <p data-i18n-en="Spend your Smart points on unique achievements, badges and titles">Потратьте ваши Smart очки на уникальные достижения, значки и титулы</p>
                 </div>
 
@@ -468,7 +469,7 @@
 
                 <!-- Inventory Section -->
                 <div class="inventory-section">
-                    <h2 data-i18n-en="🎒 My Inventory">🎒 Мой инвентарь</h2>
+                    <h2 data-i18n-en="<i class=\"fa-solid fa-boxes-stacked\"></i> My Inventory"><i class="fa-solid fa-boxes-stacked"></i> Мой инвентарь</h2>
                     <div class="inventory-grid" id="inventoryGrid">
                         <!-- Приобретенные товары будут отображены здесь -->
                     </div>
@@ -550,30 +551,36 @@
                 {
                     id: 'achievement_quiz_master',
                     name: 'Мастер квизов',
+                    nameEn: 'Quiz Master',
                     type: 'achievement',
                     category: 'achievements',
-                    icon: '🎯',
+                    icon: '<i class="fa-solid fa-bullseye"></i>',
                     description: 'Специальное достижение за отличные результаты в квизах',
+                    descriptionEn: 'A special achievement for excellent quiz results',
                     price: 50,
                     rarity: 'common'
                 },
                 {
                     id: 'achievement_smart_collector',
                     name: 'Собиратель Smart',
+                    nameEn: 'Smart Collector',
                     type: 'achievement',
                     category: 'achievements',
-                    icon: '💰',
+                    icon: '<i class="fa-solid fa-sack-dollar"></i>',
                     description: 'Эксклюзивное достижение для активных пользователей',
+                    descriptionEn: 'An exclusive achievement for active users',
                     price: 100,
                     rarity: 'rare'
                 },
                 {
                     id: 'achievement_legend',
                     name: 'Легенда SmartScroll',
+                    nameEn: 'SmartScroll Legend',
                     type: 'achievement',
                     category: 'achievements',
-                    icon: '👑',
+                    icon: '<i class="fa-solid fa-crown"></i>',
                     description: 'Легендарное достижение для самых преданных пользователей',
+                    descriptionEn: 'A legendary achievement for the most dedicated users',
                     price: 500,
                     rarity: 'legendary'
                 },
@@ -582,40 +589,48 @@
                 {
                     id: 'badge_brain',
                     name: 'Значок Мозга',
+                    nameEn: 'Brain Badge',
                     type: 'badge',
                     category: 'badges',
-                    icon: '🧠',
+                    icon: '<i class="fa-solid fa-brain"></i>',
                     description: 'Стильный значок с изображением мозга',
+                    descriptionEn: 'A stylish badge with a brain image',
                     price: 25,
                     rarity: 'common'
                 },
                 {
                     id: 'badge_star',
                     name: 'Звездный значок',
+                    nameEn: 'Star Badge',
                     type: 'badge',
                     category: 'badges',
-                    icon: '⭐',
+                    icon: '<i class="fa-solid fa-star"></i>',
                     description: 'Блестящий звездный значок',
+                    descriptionEn: 'A shiny star badge',
                     price: 75,
                     rarity: 'rare'
                 },
                 {
                     id: 'badge_crown',
                     name: 'Королевский значок',
+                    nameEn: 'Royal Badge',
                     type: 'badge',
                     category: 'badges',
-                    icon: '👑',
+                    icon: '<i class="fa-solid fa-crown"></i>',
                     description: 'Роскошный королевский значок',
+                    descriptionEn: 'A luxurious royal badge',
                     price: 200,
                     rarity: 'epic'
                 },
                 {
                     id: 'badge_diamond',
                     name: 'Алмазный значок',
+                    nameEn: 'Diamond Badge',
                     type: 'badge',
                     category: 'badges',
-                    icon: '💎',
+                    icon: '<i class="fa-solid fa-gem"></i>',
                     description: 'Редкий алмазный значок',
+                    descriptionEn: 'A rare diamond badge',
                     price: 300,
                     rarity: 'legendary'
                 },
@@ -624,40 +639,48 @@
                 {
                     id: 'title_beginner',
                     name: 'Новичок',
+                    nameEn: 'Beginner',
                     type: 'title',
                     category: 'titles',
-                    icon: '🌱',
+                    icon: '<i class="fa-solid fa-seedling"></i>',
                     description: 'Титул для начинающих пользователей',
+                    descriptionEn: 'A title for beginner users',
                     price: 30,
                     rarity: 'common'
                 },
                 {
                     id: 'title_expert',
                     name: 'Эксперт',
+                    nameEn: 'Expert',
                     type: 'title',
                     category: 'titles',
-                    icon: '🎓',
+                    icon: '<i class="fa-solid fa-graduation-cap"></i>',
                     description: 'Титул для опытных пользователей',
+                    descriptionEn: 'A title for experienced users',
                     price: 150,
                     rarity: 'rare'
                 },
                 {
                     id: 'title_master',
                     name: 'Мастер',
+                    nameEn: 'Master',
                     type: 'title',
                     category: 'titles',
-                    icon: '🏆',
+                    icon: '<i class="fa-solid fa-trophy"></i>',
                     description: 'Титул для мастеров SmartScroll',
+                    descriptionEn: 'A title for SmartScroll masters',
                     price: 400,
                     rarity: 'epic'
                 },
                 {
                     id: 'title_legend',
                     name: 'Легенда',
+                    nameEn: 'Legend',
                     type: 'title',
                     category: 'titles',
-                    icon: '🌟',
+                    icon: '<i class="fa-solid fa-star"></i>',
                     description: 'Легендарный титул',
+                    descriptionEn: 'A legendary title',
                     price: 1000,
                     rarity: 'legendary'
                 },
@@ -666,30 +689,36 @@
                 {
                     id: 'effect_glow',
                     name: 'Светящийся эффект',
+                    nameEn: 'Glow Effect',
                     type: 'effect',
                     category: 'effects',
-                    icon: '✨',
+                    icon: '<i class="fa-solid fa-wand-magic-sparkles"></i>',
                     description: 'Добавляет светящийся эффект к вашему профилю',
+                    descriptionEn: 'Adds a glow effect to your profile',
                     price: 80,
                     rarity: 'rare'
                 },
                 {
                     id: 'effect_rainbow',
                     name: 'Радужный эффект',
+                    nameEn: 'Rainbow Effect',
                     type: 'effect',
                     category: 'effects',
-                    icon: '🌈',
+                    icon: '<i class="fa-solid fa-rainbow"></i>',
                     description: 'Красивый радужный эффект',
+                    descriptionEn: 'A beautiful rainbow effect',
                     price: 120,
                     rarity: 'epic'
                 },
                 {
                     id: 'effect_particles',
                     name: 'Эффект частиц',
+                    nameEn: 'Particle Effect',
                     type: 'effect',
                     category: 'effects',
-                    icon: '✨',
+                    icon: '<i class="fa-solid fa-wand-magic-sparkles"></i>',
                     description: 'Анимированные частицы вокруг профиля',
+                    descriptionEn: 'Animated particles around your profile',
                     price: 200,
                     rarity: 'legendary'
                 }
@@ -720,19 +749,20 @@
                     <div class="item-header">
                         <div class="item-icon">${item.icon}</div>
                         <div class="item-info">
-                            <h3>${item.name}</h3>
-                            <div class="item-type">${getTypeLabel(item.type)}</div>
+                            <h3 data-i18n-en="${item.nameEn}">${item.name}</h3>
+                            <div class="item-type" data-i18n-en="${getTypeLabelEn(item.type)}">${getTypeLabel(item.type)}</div>
                         </div>
                     </div>
-                    <div class="item-description">${item.description}</div>
+                    <div class="item-description" data-i18n-en="${item.descriptionEn}">${item.description}</div>
                     <div class="item-footer">
                         <div class="item-price">
-                            <span class="smart-icon">🧠</span>
+                            <span class="smart-icon"><i class="fa-solid fa-brain"></i></span>
                             <span>${item.price}</span>
                         </div>
-                        <button class="buy-btn ${isOwned ? 'owned' : ''}" 
-                                onclick="purchaseItem('${item.id}')" 
-                                ${isOwned || !canAfford ? 'disabled' : ''}>
+                        <button class="buy-btn ${isOwned ? 'owned' : ''}"
+                                onclick="purchaseItem('${item.id}')"
+                                ${isOwned || !canAfford ? 'disabled' : ''}
+                                data-i18n-en="${isOwned ? 'Owned' : (canAfford ? 'Buy' : 'Not enough Smart')}">
                             ${isOwned ? 'Приобретено' : (canAfford ? 'Купить' : 'Недостаточно Smart')}
                         </button>
                     </div>
@@ -831,7 +861,7 @@
             const inventoryGrid = document.getElementById('inventoryGrid');
             
             if (inventory.length === 0) {
-                inventoryGrid.innerHTML = '<div class="empty-inventory">🎒 Инвентарь пуст<br>Купите товары в магазине!</div>';
+                inventoryGrid.innerHTML = '<div class="empty-inventory" data-i18n-en-html="<i class=\"fa-solid fa-boxes-stacked\"></i> Inventory is empty<br>Buy items in the shop!"><i class="fa-solid fa-boxes-stacked"></i> Инвентарь пуст<br>Купите товары в магазине!</div>';
                 return;
             }
 

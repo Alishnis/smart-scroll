@@ -251,10 +251,10 @@ class ConferenceService {
             <div class="participant-info">${participant.identity}</div>
             <div class="participant-controls">
                 <button class="control-btn" onclick="conferenceService.toggleParticipantMute('${participant.sid}')" title="Включить/выключить звук">
-                    🎤
+                    <i class="fa-solid fa-microphone"></i>
                 </button>
                 <button class="control-btn" onclick="conferenceService.toggleParticipantVideo('${participant.sid}')" title="Включить/выключить видео">
-                    📹
+                    <i class="fa-solid fa-video"></i>
                 </button>
             </div>
         `;
@@ -406,7 +406,7 @@ class ConferenceService {
     updateMuteButton() {
         const muteBtn = document.getElementById('muteBtn');
         if (muteBtn) {
-            muteBtn.textContent = this.isMuted ? '🔇' : '🎤';
+            muteBtn.innerHTML = this.isMuted ? '<i class="fa-solid fa-microphone-slash"></i>' : '<i class="fa-solid fa-microphone"></i>';
             muteBtn.classList.toggle('muted', this.isMuted);
         }
     }
@@ -415,7 +415,7 @@ class ConferenceService {
     updateVideoButton() {
         const videoBtn = document.getElementById('videoBtn');
         if (videoBtn) {
-            videoBtn.textContent = this.isVideoEnabled ? '📹' : '📷';
+            videoBtn.innerHTML = this.isVideoEnabled ? '<i class="fa-solid fa-video"></i>' : '<i class="fa-solid fa-camera"></i>';
             videoBtn.classList.toggle('video-off', !this.isVideoEnabled);
         }
     }
@@ -424,7 +424,7 @@ class ConferenceService {
     updateScreenShareButton() {
         const screenShareBtn = document.getElementById('screenShareBtn');
         if (screenShareBtn) {
-            screenShareBtn.textContent = this.isScreenSharing ? '🖥️' : '🖥️';
+            screenShareBtn.innerHTML = this.isScreenSharing ? '<i class="fa-solid fa-desktop"></i>' : '<i class="fa-solid fa-desktop"></i>';
             screenShareBtn.classList.toggle('active', this.isScreenSharing);
         }
     }

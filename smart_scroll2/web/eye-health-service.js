@@ -107,7 +107,7 @@ class EyeHealthService {
         window.innerHTML = `
             <div class="reminder-overlay">
                 <div class="reminder-content">
-                    <div class="reminder-icon">👁️</div>
+                    <div class="reminder-icon"><i class="fa-solid fa-eye"></i></div>
                     <h2>Время перерыва для глаз!</h2>
                     <p>Сделайте перерыв и посмотрите вдаль на 20 секунд</p>
                     <div class="break-timer" id="breakTimer">${this.breakDuration}</div>
@@ -231,7 +231,7 @@ class EyeHealthService {
         notification.className = 'demo-notification';
         notification.innerHTML = `
             <div class="demo-content">
-                <span class="demo-icon">⏰</span>
+                <span class="demo-icon"><i class="fa-solid fa-clock"></i></span>
                 <span class="demo-text">Через 15 секунд - перерыв для глаз!</span>
             </div>
         `;
@@ -398,7 +398,7 @@ class EyeHealthService {
         window.innerHTML = `
             <div class="exercise-overlay">
                 <div class="exercise-content">
-                    <div class="exercise-icon">💪</div>
+                    <div class="exercise-icon"><i class="fa-solid fa-dumbbell"></i></div>
                     <h2>${exercise.name}</h2>
                     <p>${exercise.instructions}</p>
                     <div class="exercise-timer" id="exerciseTimer">${exercise.duration}</div>

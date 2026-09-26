@@ -268,7 +268,7 @@ class SimpleEyeMonitor {
     showDangerNotification(distance) {
         this.notification.innerHTML = `
             <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="font-size: 24px;">⚠️</div>
+                <div style="font-size: 24px;"><i class="fa-solid fa-triangle-exclamation"></i></div>
                 <div>
                     <div style="font-size: 16px; font-weight: bold;">ОПАСНОСТЬ!</div>
                     <div style="font-size: 14px; opacity: 0.9;">Слишком близко: ${distance}см</div>
@@ -282,7 +282,7 @@ class SimpleEyeMonitor {
     showWarningNotification(distance, message = 'Предупреждение') {
         this.notification.innerHTML = `
             <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="font-size: 24px;">👁️</div>
+                <div style="font-size: 24px;"><i class="fa-solid fa-eye"></i></div>
                 <div>
                     <div style="font-size: 16px; font-weight: bold;">${message}</div>
                     <div style="font-size: 14px; opacity: 0.9;">Расстояние: ${distance}см</div>
@@ -307,7 +307,7 @@ class SimpleEyeMonitor {
         
         this.notification.innerHTML = `
             <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="font-size: 20px;">ℹ️</div>
+                <div style="font-size: 20px;"><i class="fa-solid fa-circle-info"></i></div>
                 <div style="font-size: 14px;">${message}</div>
             </div>
         `;

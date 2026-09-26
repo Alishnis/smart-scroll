@@ -8,6 +8,7 @@
     
     <!-- Единая навигация -->
     <link rel="stylesheet" href="unified-navbar.css?v=2">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="unified-navbar.js?v=2"></script>
     <script src="i18n.js?v=3" defer></script>
     
@@ -396,7 +397,7 @@
     <div class="container">
         <!-- Система напоминаний -->
         <div class="section">
-            <h2>⏰ <span data-i18n-en="Reminder System">Система напоминаний</span></h2>
+            <h2><i class="fa-solid fa-clock"></i> <span data-i18n-en="Reminder System">Система напоминаний</span></h2>
 
             <div class="controls">
                 <div class="control-group">
@@ -428,7 +429,7 @@
 
         <!-- Отслеживание времени -->
         <div class="section">
-            <h2>📊 <span data-i18n-en="Usage Statistics">Статистика использования</span></h2>
+            <h2><i class="fa-solid fa-chart-column"></i> <span data-i18n-en="Usage Statistics">Статистика использования</span></h2>
 
             <div class="stats-grid">
                 <div class="stat-card">
@@ -454,7 +455,7 @@
 
         <!-- Упражнения для глаз -->
         <div class="section">
-            <h2>💪 <span data-i18n-en="Eye Exercises">Упражнения для глаз</span></h2>
+            <h2><i class="fa-solid fa-dumbbell"></i> <span data-i18n-en="Eye Exercises">Упражнения для глаз</span></h2>
 
             <div class="exercise-card" onclick="startExercise('blinking')">
                 <div class="exercise-title" data-i18n-en="Blinking">Моргание</div>
@@ -491,7 +492,7 @@
 
         <!-- Настройки -->
         <div class="section">
-            <h2>⚙️ <span data-i18n-en="Settings">Настройки</span></h2>
+            <h2><i class="fa-solid fa-gear"></i> <span data-i18n-en="Settings">Настройки</span></h2>
 
             <div class="controls">
                 <div class="control-group">
@@ -521,7 +522,7 @@
     <!-- Окно напоминания -->
     <div class="reminder-window" id="reminderWindow">
         <div class="reminder-content">
-            <div class="reminder-title">⏰ <span data-i18n-en="Break time!">Время перерыва!</span></div>
+            <div class="reminder-title"><i class="fa-solid fa-clock"></i> <span data-i18n-en="Break time!">Время перерыва!</span></div>
             <div class="reminder-text" id="reminderText" data-i18n-en="Take a break for your eyes. Look into the distance for 20 seconds.">
                 Сделайте перерыв для ваших глаз. Посмотрите вдаль на 20 секунд.
             </div>
