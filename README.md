@@ -6,7 +6,20 @@ SmartScroll turns the endless-scroll feed people already spend hours on (YouTube
 
 ## Screenshots
 
-> Screenshots aren't committed yet — the live demo below is the fastest way to see the actual UI. Drop PNGs into `smart_scroll2/docs/screenshots/` and reference them here (e.g. `![Feed](smart_scroll2/docs/screenshots/feed.png)`) once you have them; the sections below list which pages are worth capturing.
+**Feed — AI video summary**
+![Feed with AI summary](smart_scroll2/docs/screenshots/feed-summary.png)
+
+**Feed — AI-generated quiz**
+![Feed with quiz](smart_scroll2/docs/screenshots/feed-quiz.png)
+
+**Stats — activity tracking**
+![Stats page](smart_scroll2/docs/screenshots/stats.png)
+
+**Document Reader — upload and ask questions**
+![Document reader](smart_scroll2/docs/screenshots/document-reader.png)
+
+**Conferences — Twilio Video room, from a phone**
+![Video conference](smart_scroll2/docs/screenshots/conference.png)
 
 | Page | What it shows |
 |---|---|
@@ -91,7 +104,7 @@ change needed to move between the two.
 - Docker Hub — public image registry
 - Azure Container Instances — the actual runtime, on an Azure for Students subscription
 
-**Third-party APIs** — Reddit API (OAuth2), YouTube Data API v3, OpenRouter (LLM routing — currently `mistralai/mistral-nemo`), Twilio Video.
+**Third-party APIs** — Reddit API (OAuth2), YouTube Data API v3, OpenRouter (LLM routing — currently `deepseek/deepseek-chat-v3.1`), Twilio Video.
 
 ## My contribution
 
