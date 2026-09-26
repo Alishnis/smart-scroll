@@ -327,7 +327,16 @@
         .quiz-explanation strong {
             color: #30CAA1;
         }
-        
+
+        .quiz-explanation.incorrect {
+            background: rgba(255, 107, 107, 0.1);
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+
+        .quiz-explanation.incorrect strong {
+            color: #FF6B6B;
+        }
+
         .quiz-check-btn {
             background: linear-gradient(135deg, #30CAA1 0%, #20A0FF 100%);
             color: #FFFFFF;
@@ -1298,12 +1307,29 @@ ${videoContent}
             return quizHTML;
         }
 
+        // Модель отдаёт текст правильного ответа, а не индекс — числовой индекс,
+        // отдельный от списка options, слишком легко рассинхронизировать
+        // (проверено на нескольких моделях: объяснение верное, а индекс — нет).
+        // Индекс вычисляем сами через сопоставление строк, это надёжнее.
+        function resolveCorrectIndex(q) {
+            const normalize = (s) => String(s).trim().toLowerCase();
+            const target = normalize(q.correctAnswer);
+            let index = q.options.findIndex((opt) => normalize(opt) === target);
+            if (index === -1) {
+                index = q.options.findIndex((opt) => normalize(opt).includes(target) || target.includes(normalize(opt)));
+            }
+            return index === -1 ? 0 : index;
+        }
+
         function parseQuizJSON(raw) {
             const cleaned = raw.trim().replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/i, '');
             const questions = JSON.parse(cleaned);
             if (!Array.isArray(questions) || questions.length === 0) {
                 throw new Error('Некорректный формат квиза от модели');
             }
+            questions.forEach((q) => {
+                q.correctIndex = resolveCorrectIndex(q);
+            });
             return questions;
         }
 
@@ -1337,10 +1363,15 @@ ${videoContent}
 
             quizContainers.forEach((container) => {
                 const explanation = container.querySelector('.quiz-explanation');
-                if (explanation) explanation.style.display = 'block';
-
                 const selectedAnswer = container.querySelector('input[type="radio"]:checked');
-                if (selectedAnswer && selectedAnswer.value === container.dataset.correct) {
+                const isCorrect = !!selectedAnswer && selectedAnswer.value === container.dataset.correct;
+
+                if (explanation) {
+                    explanation.style.display = 'block';
+                    explanation.classList.toggle('incorrect', !isCorrect);
+                }
+
+                if (isCorrect) {
                     correctAnswers++;
                 }
             });
