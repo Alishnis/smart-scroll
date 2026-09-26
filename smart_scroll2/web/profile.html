@@ -220,12 +220,81 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 1.8rem;
+                padding: 0 8px;
+            }
+
+            .smart-stats-section,
+            .achievements-section {
+                margin: 20px 0;
+                padding: 16px;
+            }
+
             .smart-stats-grid {
                 grid-template-columns: 1fr;
+                gap: 12px;
             }
-            
+
+            .stat-item {
+                padding: 12px;
+            }
+
             .achievements-grid {
                 grid-template-columns: 1fr;
+            }
+
+            /* The right-sidebar slide-in panel (summary/notes/quiz cards) is a
+               desktop side-column widget from template-styles.css that defaults
+               to 30% width even when .content stacks to a single column on
+               mobile. Force it full-width here instead of touching the shared
+               stylesheet. */
+            .sidebar-content--expanded {
+                width: 100% !important;
+            }
+
+            .summary-card,
+            .notes-card,
+            .quiz-card {
+                max-width: 100%;
+                min-height: auto;
+            }
+
+            .quiz-card__options {
+                grid-template-columns: 1fr;
+            }
+
+            .quiz-card__navigation {
+                flex-direction: column;
+            }
+
+            .quiz-card__nav {
+                justify-content: center;
+                min-height: 40px;
+            }
+
+            .notes-card__textarea {
+                min-height: 200px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .stat-value {
+                font-size: 1.3rem;
+            }
+
+            .achievement-card {
+                padding: 12px;
+            }
+
+            .shop-btn {
+                width: 100%;
+                min-height: 44px;
+                box-sizing: border-box;
             }
         }
     </style>

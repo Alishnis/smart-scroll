@@ -323,19 +323,100 @@
 
         /* Responsive */
         @media (max-width: 768px) {
+            .main-content {
+                padding: 16px;
+            }
+
+            .shop-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .shop-header p {
+                font-size: 0.95rem;
+            }
+
+            .stats-section {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
             .shop-grid {
                 grid-template-columns: 1fr;
             }
-            
+
+            .shop-item {
+                padding: 18px;
+            }
+
             .shop-categories {
                 justify-content: flex-start;
                 overflow-x: auto;
                 padding-bottom: 10px;
             }
-            
+
             .category-btn {
                 white-space: nowrap;
                 flex-shrink: 0;
+                min-height: 40px;
+            }
+
+            .item-footer {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .buy-btn {
+                width: 100%;
+                min-height: 44px;
+            }
+
+            .inventory-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .shop-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .stats-section {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .stat-card {
+                padding: 14px;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .item-header {
+                gap: 10px;
+            }
+
+            .item-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 2rem;
+            }
+
+            .item-info h3 {
+                font-size: 1.05rem;
+            }
+
+            .shop-item.owned::before {
+                position: static;
+                display: inline-block;
+                margin-bottom: 10px;
+                font-size: 11px;
+            }
+
+            .inventory-grid {
+                grid-template-columns: 1fr 1fr;
             }
         }
     </style>

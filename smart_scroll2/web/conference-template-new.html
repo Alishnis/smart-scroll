@@ -446,6 +446,99 @@
             box-shadow: 0 10px 30px rgba(48, 202, 161, 0.5);
         }
 
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 16px 16px 0;
+            }
+
+            .page-header h1 {
+                font-size: 1.7rem;
+            }
+
+            .main-video-container {
+                margin-bottom: 14px !important;
+            }
+
+            .main-video {
+                height: 240px !important;
+            }
+
+            .video-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                margin: 14px 0;
+            }
+
+            .video-participant video,
+            .video-container,
+            .video-placeholder {
+                height: 160px;
+            }
+
+            .conference-management,
+            .room-info,
+            .device-selector,
+            .conference-status,
+            .no-participants-message {
+                padding: 16px;
+                margin: 14px 0;
+            }
+
+            .conference-controls {
+                gap: 10px;
+            }
+
+            .conference-btn {
+                padding: 12px 20px;
+                font-size: 14px;
+                width: 100%;
+                max-width: 300px;
+                min-height: 44px;
+            }
+
+            .control-btn {
+                width: 48px;
+                height: 48px;
+                flex-shrink: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header h1 {
+                font-size: 1.4rem;
+            }
+
+            .main-video {
+                height: 200px !important;
+            }
+
+            .video-participant video,
+            .video-container,
+            .video-placeholder {
+                height: 140px;
+            }
+
+            .conference-controls {
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            .control-btn {
+                width: 44px;
+                height: 44px;
+            }
+
+            .modal-body input {
+                padding: 12px 14px;
+                font-size: 16px; /* prevent iOS zoom */
+            }
+
+            .modal-footer .btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+        }
+
     </style>
 </head>
 <body>

@@ -450,13 +450,94 @@
         .main {
             padding-top: 0 !important;
         }
-        
+
         .page {
             padding-top: 0 !important;
         }
-        
+
         .feed-container {
             margin-top: 0 !important;
+        }
+
+        /* Mobile layout: stack video full-width, panel icons become a row below it,
+           and the side panel becomes a bottom sheet instead of sliding in from the right. */
+        @media (max-width: 768px) {
+            .video-section {
+                flex-direction: column;
+                justify-content: center;
+                height: auto;
+                min-height: 100vh;
+                padding: 12px;
+                gap: 12px;
+            }
+
+            .video-card {
+                max-width: 100%;
+                width: 100%;
+                flex: none;
+                height: auto;
+                min-height: 0;
+            }
+
+            .video-player {
+                height: auto;
+                aspect-ratio: 16 / 9;
+            }
+
+            .video-panels {
+                position: static;
+                transform: none;
+                width: 100%;
+                flex-direction: row;
+                justify-content: center;
+                align-self: center;
+            }
+
+            .panel-item {
+                width: 52px;
+                height: 52px;
+            }
+
+            .video-info {
+                padding: 14px;
+            }
+
+            .video-title {
+                font-size: 17px;
+            }
+
+            .video-description {
+                font-size: 13px;
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+            }
+
+            .video-actions .action-btn {
+                padding: 8px 14px;
+                font-size: 13px;
+            }
+
+            .global-panel {
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0;
+                top: auto;
+                transform: translateY(100%);
+                width: 100%;
+                max-width: 100%;
+                max-height: 80vh;
+                border-radius: 16px 16px 0 0;
+            }
+
+            .global-panel.active {
+                transform: translateY(0);
+            }
+
+            .panel-body {
+                max-height: calc(80vh - 70px);
+            }
         }
     </style>
 </head>

@@ -276,11 +276,68 @@
 
         @media (max-width: 768px) {
             .document-reader .main {
-                padding: 0 20px 140px; /* Дополнительное место для нижнего навбара на мобильных */
+                padding: 0 16px 140px; /* Дополнительное место для нижнего навбара на мобильных */
             }
-            
+
             .document-reader .content {
                 flex-direction: column;
+                min-height: 0;
+            }
+
+            .upload-card,
+            .question-section {
+                padding: 16px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .upload-area {
+                padding: 24px 16px;
+            }
+
+            .upload-icon {
+                font-size: 2.2rem;
+            }
+
+            .upload-text {
+                font-size: 1rem;
+            }
+
+            .extracted-text {
+                max-height: 220px;
+            }
+
+            .question-input {
+                font-size: 16px; /* prevent iOS zoom */
+            }
+
+            .ask-button {
+                min-height: 44px;
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .document-reader .main {
+                padding: 0 12px 140px;
+            }
+
+            .upload-card,
+            .question-section {
+                padding: 14px;
+            }
+
+            .upload-area {
+                padding: 20px 12px;
+            }
+
+            .upload-card__title,
+            .question-section__title {
+                font-size: 16px;
+            }
+
+            .supported-formats {
+                font-size: 0.8rem;
             }
         }
 
