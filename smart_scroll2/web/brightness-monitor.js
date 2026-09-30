@@ -18,7 +18,7 @@ class BrightnessMonitor {
             warningBrightness: 120, // Предупреждение при низкой яркости (близко)
             dangerBrightness: 100,  // Опасность при очень низкой яркости (очень близко)
             soundEnabled: true,
-            autoStart: true,
+            autoStart: false, // temporarily disabled
             // Калибровочные параметры для яркости
             calibration: {
                 minBrightness: 150,   // Минимальная яркость (далеко)
@@ -50,7 +50,8 @@ class BrightnessMonitor {
         this.createNotification();
         
         // Автозапуск если включен
-        if (this.settings.autoStart) {
+        // TEMPORARILY DISABLED
+        if (false && this.settings.autoStart) {
             await this.start();
         }
     }

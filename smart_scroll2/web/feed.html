@@ -1512,7 +1512,15 @@ ${videoContent}
                 if (isCorrect) {
                     correctAnswers++;
                 }
+
+                if (window.SmartCurrency) {
+                    window.SmartCurrency.rewardQuizAnswer(isCorrect);
+                }
             });
+
+            if (window.SmartCurrency && totalQuestions > 0) {
+                window.SmartCurrency.rewardQuizCompletion(correctAnswers, totalQuestions);
+            }
 
             // Show results
             const resultDiv = document.createElement('div');

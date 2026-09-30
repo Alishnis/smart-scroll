@@ -98,6 +98,11 @@ function initializeNavbar() {
     if (activeItem) {
         activeItem.classList.add('ss-navbar__item--active');
     }
+
+    // Обновляем счётчик Smart валюты сразу после вставки хедера в DOM
+    // (initializeSmartCurrency на DOMContentLoaded успевает отработать раньше,
+    // чем этот хедер вставлен через fetch, поэтому счётчик застревал на "0")
+    initializeSmartCurrency();
     
     // Инициализируем выпадающие меню
     initializeDropdowns();
