@@ -3,6 +3,10 @@
  * Система игровой валюты Smart для геймификации
  */
 
+function getUiLang() {
+    return (window.SmartScrollI18N && window.SmartScrollI18N.getLang) ? window.SmartScrollI18N.getLang() : 'ru';
+}
+
 class SmartCurrency {
     constructor() {
         this.storageKey = 'smart_currency_points';
@@ -83,32 +87,33 @@ class SmartCurrency {
 
     // Проверить достижения
     checkAchievements(points) {
+        const isEn = getUiLang() === 'en';
         const achievements = [
             {
                 id: 'first_smart',
-                title: 'Первые Smart очки',
-                description: 'Заработали первые 10 Smart очков',
+                title: isEn ? 'First Smart points' : 'Первые Smart очки',
+                description: isEn ? 'Earned your first 10 Smart points' : 'Заработали первые 10 Smart очков',
                 icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>',
                 requirement: 10
             },
             {
                 id: 'smart_collector',
-                title: 'Собиратель Smart',
-                description: 'Заработали 100 Smart очков',
+                title: isEn ? 'Smart collector' : 'Собиратель Smart',
+                description: isEn ? 'Earned 100 Smart points' : 'Заработали 100 Smart очков',
                 icon: '<i class="fa-solid fa-sack-dollar"></i>',
                 requirement: 100
             },
             {
                 id: 'smart_master',
-                title: 'Мастер Smart',
-                description: 'Заработали 500 Smart очков',
+                title: isEn ? 'Smart master' : 'Мастер Smart',
+                description: isEn ? 'Earned 500 Smart points' : 'Заработали 500 Smart очков',
                 icon: '<i class="fa-solid fa-crown"></i>',
                 requirement: 500
             },
             {
                 id: 'smart_legend',
-                title: 'Легенда Smart',
-                description: 'Заработали 1000 Smart очков',
+                title: isEn ? 'Smart legend' : 'Легенда Smart',
+                description: isEn ? 'Earned 1000 Smart points' : 'Заработали 1000 Smart очков',
                 icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>',
                 requirement: 1000
             }
@@ -349,7 +354,7 @@ class SmartCurrency {
         };
 
         const amount = rewards[difficulty] || 10;
-        return this.addPoints(amount, 'Правильный ответ в квизе');
+        return this.addPoints(amount, getUiLang() === 'en' ? 'Correct quiz answer' : 'Правильный ответ в квизе');
     }
 
     // Наградить за завершение квиза
@@ -362,7 +367,8 @@ class SmartCurrency {
         else if (percentage >= 50) bonus = 15;
 
         if (bonus > 0) {
-            this.addPoints(bonus, `Бонус за отличный результат (${Math.round(percentage)}%)`);
+            const isEn = getUiLang() === 'en';
+            this.addPoints(bonus, isEn ? `Bonus for a great score (${Math.round(percentage)}%)` : `Бонус за отличный результат (${Math.round(percentage)}%)`);
         }
 
         return bonus;
