@@ -517,8 +517,8 @@
                                 <div class="progress-bar">
                                     <div class="progress-bar__fill" style="width: 78%"></div>
                                 </div>
-                                <div style="text-align: center; color: rgba(255, 255, 255, 0.7); font-size: 14px;" data-i18n-en="1,247 / 1,600 points (78%)">
-                                    1,247 / 1,600 очков (78%)
+                                <div id="levelProgressText" style="text-align: center; color: rgba(255, 255, 255, 0.7); font-size: 14px;">
+                                    0 / 1,000 очков (0%)
                                 </div>
                             </div>
 
@@ -620,12 +620,9 @@
                     // Добавляем только новое время (не дублируем)
                     this.totalTime += timeDiff;
                     this.sessionStart = currentTime;
-                    
-                    // Начисляем очки за активность (1 очко за минуту)
-                    const newPoints = Math.floor(timeDiff / 1000 / 60);
-                    if (newPoints > 0) {
-                        this.points += newPoints;
-                    }
+
+                    // Начисляем очки за активность (1 очко за минуту общего времени на сайте)
+                    this.points = Math.floor(this.totalTime / 1000 / 60);
                     
                     // Отладочная информация
                     console.log(`🕐 Активность: ${Math.floor(this.totalTime / 1000 / 60)}м, Очки: ${this.points}`);
@@ -717,12 +714,16 @@
             
             updateProgressBar() {
                 const progressBar = document.querySelector('.progress-bar__fill');
-                const progressText = document.querySelector('.chart-container div:last-child');
-                
+                const progressText = document.getElementById('levelProgressText');
+
                 if (progressBar && progressText) {
                     const progress = Math.min((this.points / 1000) * 100, 100); // 1000 очков = 100%
                     progressBar.style.width = `${progress}%`;
-                    progressText.textContent = `${this.points} / 1,000 points (${Math.round(progress)}%)`;
+                    const isEn = window.SmartScrollI18N && window.SmartScrollI18N.getLang && window.SmartScrollI18N.getLang() === 'en';
+                    const points = this.points.toLocaleString();
+                    progressText.textContent = isEn
+                        ? `${points} / 1,000 points (${Math.round(progress)}%)`
+                        : `${points} / 1 000 очков (${Math.round(progress)}%)`;
                 }
             }
             
