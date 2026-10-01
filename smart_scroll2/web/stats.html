@@ -545,96 +545,24 @@
 
     <script src="script.js"></script>
     <script>
-        // Система реального отслеживания времени
-        class TimeTracker {
-            constructor() {
-                this.startTime = Date.now();
-                this.sessionStart = Date.now();
-                this.totalTime = this.loadTotalTime();
-                this.sessionTime = 0;
-                this.points = this.loadPoints();
-                this.isActive = true;
-                this.lastActivity = Date.now();
-                
-                this.init();
+        // Отображение статистики на основе глобального window.SiteTimeTracker
+        // (time-tracker.js, подключается на каждой странице через unified-navbar.js —
+        // так время накапливается, даже когда пользователь не на этой странице).
+        class StatsDisplay {
+            constructor(tracker) {
+                this.tracker = tracker;
+                this.render();
+                setInterval(() => this.render(), 1000);
             }
-            
-            init() {
-                console.log('🚀 Инициализация TimeTracker...');
-                
-                // Загружаем сохраненные данные
-                this.loadData();
-                console.log(`📊 Загружены данные: ${Math.floor(this.totalTime / 1000 / 60)}м, ${this.points} очков`);
-                
-                // Отслеживаем активность пользователя
-                this.trackActivity();
-                
-                // Обновляем статистику каждую секунду
-                this.updateStats();
-                
-                // Сохраняем данные каждые 30 секунд
-                setInterval(() => {
-                    console.log('💾 Автосохранение данных...');
-                    this.saveData();
-                }, 30000);
-                
-                // Обработка закрытия/перезагрузки страницы
-                window.addEventListener('beforeunload', () => {
-                    console.log('💾 Сохранение при закрытии...');
-                    this.saveData();
-                });
-                window.addEventListener('visibilitychange', () => this.handleVisibilityChange());
-                
-                console.log('✅ TimeTracker инициализирован');
-            }
-            
-            trackActivity() {
-                const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
-                
-                events.forEach(event => {
-                    document.addEventListener(event, () => {
-                        this.lastActivity = Date.now();
-                        if (!this.isActive) {
-                            console.log('🟢 Пользователь стал активен');
-                            this.isActive = true;
-                            this.sessionStart = Date.now();
-                        }
-                    }, true);
-                });
-                
-                // Проверяем активность каждые 5 секунд
-                setInterval(() => {
-                    const timeSinceActivity = Date.now() - this.lastActivity;
-                    if (timeSinceActivity > 30000 && this.isActive) { // 30 секунд неактивности
-                        console.log('🔴 Пользователь неактивен');
-                        this.isActive = false;
-                    }
-                }, 5000);
-            }
-            
-            updateStats() {
-                if (this.isActive) {
-                    const currentTime = Date.now();
-                    const timeDiff = currentTime - this.sessionStart;
-                    
-                    // Добавляем только новое время (не дублируем)
-                    this.totalTime += timeDiff;
-                    this.sessionStart = currentTime;
 
-                    // Начисляем очки за активность (1 очко за минуту общего времени на сайте)
-                    this.points = Math.floor(this.totalTime / 1000 / 60);
-                    
-                    // Отладочная информация
-                    console.log(`🕐 Активность: ${Math.floor(this.totalTime / 1000 / 60)}м, Очки: ${this.points}`);
-                }
-                
-                this.displayStats();
-                
-                // Обновляем каждую секунду
-                setTimeout(() => this.updateStats(), 1000);
-            }
-            
-            displayStats() {
+            get totalTime() { return this.tracker.totalTime; }
+            get points() { return this.tracker.points; }
+            get isActive() { return this.tracker.isActive; }
+
+            getYesterdayData() { return this.tracker.getYesterdayData(); }
+            calculateStreak() { return this.tracker.calculateStreak(); }
+
+            render() {
                 const timeElement = document.getElementById('timeSpent');
                 const pointsElement = document.getElementById('pointsEarned');
                 const timeChangeElement = document.getElementById('timeChange');
@@ -724,61 +652,6 @@
                     progressText.textContent = isEn
                         ? `${points} / 1,000 points (${Math.round(progress)}%)`
                         : `${points} / 1 000 очков (${Math.round(progress)}%)`;
-                }
-            }
-            
-            loadData() {
-                const today = new Date().toDateString();
-                const savedData = JSON.parse(localStorage.getItem('smartScrollStats') || '{}');
-                
-                if (savedData[today]) {
-                    this.totalTime = savedData[today].time || 0;
-                    this.points = savedData[today].points || 0;
-                }
-            }
-            
-            saveData() {
-                const today = new Date().toDateString();
-                const savedData = JSON.parse(localStorage.getItem('smartScrollStats') || '{}');
-                
-                savedData[today] = {
-                    time: this.totalTime,
-                    points: this.points,
-                    lastUpdate: Date.now()
-                };
-                
-                localStorage.setItem('smartScrollStats', JSON.stringify(savedData));
-                console.log(`💾 Данные сохранены: ${Math.floor(this.totalTime / 1000 / 60)}м, ${this.points} очков`);
-            }
-            
-            loadTotalTime() {
-                const today = new Date().toDateString();
-                const savedData = JSON.parse(localStorage.getItem('smartScrollStats') || '{}');
-                return savedData[today]?.time || 0;
-            }
-            
-            loadPoints() {
-                const today = new Date().toDateString();
-                const savedData = JSON.parse(localStorage.getItem('smartScrollStats') || '{}');
-                return savedData[today]?.points || 0;
-            }
-            
-            getYesterdayData() {
-                const yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
-                const yesterdayStr = yesterday.toDateString();
-                const savedData = JSON.parse(localStorage.getItem('smartScrollStats') || '{}');
-                
-                return savedData[yesterdayStr] || { time: 0, points: 0 };
-            }
-            
-            handleVisibilityChange() {
-                if (document.hidden) {
-                    this.isActive = false;
-                } else {
-                    this.isActive = true;
-                    this.sessionStart = Date.now();
-                    this.lastActivity = Date.now();
                 }
             }
             
@@ -881,48 +754,16 @@
                 
                 achievementsContainer.innerHTML = html;
             }
-            
-            calculateStreak() {
-                const savedData = JSON.parse(localStorage.getItem('smartScrollStats') || '{}');
-                const today = new Date();
-                let streak = 0;
-                
-                for (let i = 0; i < 30; i++) { // Проверяем последние 30 дней
-                    const date = new Date(today);
-                    date.setDate(date.getDate() - i);
-                    const dateStr = date.toDateString();
-                    const dayData = savedData[dateStr];
-                    
-                    if (dayData && dayData.time > 0) {
-                        streak++;
-                    } else {
-                        break;
-                    }
-                }
-                
-                return streak;
-            }
         }
 
         // Функции для тестирования и отладки
         function testStats() {
-            console.log('🧪 Тестирование статистики...');
-            const timeTracker = window.timeTracker;
-            if (timeTracker) {
-                console.log('📊 Текущие данные:', {
-                    totalTime: timeTracker.totalTime,
-                    points: timeTracker.points,
-                    isActive: timeTracker.isActive,
-                    sessionStart: timeTracker.sessionStart
-                });
-                
-                // Добавляем тестовые данные
-                timeTracker.totalTime += 60000; // +1 минута
-                timeTracker.points += 1;
-                timeTracker.saveData();
-                timeTracker.displayStats();
-                
-                console.log('✅ Тестовые данные добавлены');
+            const tracker = window.SiteTimeTracker;
+            if (tracker) {
+                tracker.totalTime += 60000; // +1 минута
+                tracker.points += 1;
+                tracker.saveData();
+                if (window.statsDisplay) window.statsDisplay.render();
             }
         }
         
@@ -934,9 +775,15 @@
         
         // Дополнительная функциональность для статистики
         document.addEventListener('DOMContentLoaded', function() {
-            // Инициализируем трекер времени
-            const timeTracker = new TimeTracker();
-            window.timeTracker = timeTracker; // Делаем доступным глобально для отладки
+            // window.SiteTimeTracker грузится асинхронно (document.write из
+            // unified-navbar.js), поэтому ждём его появления перед стартом дисплея.
+            (function waitForTracker() {
+                if (window.SiteTimeTracker) {
+                    window.statsDisplay = new StatsDisplay(window.SiteTimeTracker);
+                } else {
+                    setTimeout(waitForTracker, 50);
+                }
+            })();
 
             // Анимация появления карточек статистики
             const statCards = document.querySelectorAll('.stat-card');
