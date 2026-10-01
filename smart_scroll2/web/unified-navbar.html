@@ -4,7 +4,10 @@
      конкретных страниц (template-styles.css). -->
 <!-- Верхний навбар -->
 <header class="ss-header">
-    <h1 class="ss-header__title" id="pageTitle">SmartScroll</h1>
+    <div class="ss-header__titles">
+        <h1 class="ss-header__title" id="pageTitle">SmartScroll</h1>
+        <p class="ss-header__subtitle" id="pageSubtitle"></p>
+    </div>
     <div class="ss-header__search">
         <input type="text" id="searchInput" placeholder="Поиск..." data-i18n-en-placeholder="Search..." class="ss-search-input">
         <button onclick="performSearch()" class="ss-search-btn">

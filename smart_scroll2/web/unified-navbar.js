@@ -75,6 +75,39 @@ function getPageTitleEn() {
     return entry.en;
 }
 
+// Короткое пояснение, что это за страница
+const PAGE_SUBTITLES = {
+    'dashboard.html':               { ru: 'Обучение через короткие видео', en: 'Learn through short-form video' },
+    'index.html':                   { ru: 'Обучение через короткие видео', en: 'Learn through short-form video' },
+    '':                             { ru: 'Обучение через короткие видео', en: 'Learn through short-form video' },
+    'posts.html':                   { ru: 'Обучающие посты из Reddit',    en: 'Educational posts from Reddit' },
+    'feed.html':                    { ru: 'Видео, AI-содержание и квизы', en: 'Videos, AI summaries and quizzes' },
+    'quiz-template.html':           { ru: 'Проверьте свои знания',        en: 'Test what you just learned' },
+    'flashcard-generator.html':     { ru: 'AI создаёт флешкарты для вас', en: 'AI-generated flashcards' },
+    'smart-shop.html':              { ru: 'Тратьте Smart очки на бонусы', en: 'Spend Smart points on rewards' },
+    'conference-template-new.html': { ru: 'Видеозвонки с другими учениками', en: 'Video calls with other learners' },
+    'settings.html':                { ru: 'Язык, тема и настройки аккаунта', en: 'Language, theme and account settings' },
+    'profile.html':                 { ru: 'Ваш прогресс и достижения',    en: 'Your progress and achievements' },
+    'stats.html':                   { ru: 'Статистика обучения',          en: 'Your learning statistics' },
+    'eye-health.html':              { ru: 'Забота о глазах во время учёбы', en: 'Eye care while you study' },
+    'conference.html':              { ru: 'Видеозвонки с другими учениками', en: 'Video calls with other learners' },
+    'document-reader.html':         { ru: 'Загрузите документ — получите AI-разбор', en: 'Upload a document for an AI breakdown' }
+};
+
+function getPageSubtitle() {
+    const path = window.location.pathname;
+    const filename = path.split('/').pop();
+    const entry = PAGE_SUBTITLES[filename] || PAGE_SUBTITLES['dashboard.html'];
+    return entry.ru;
+}
+
+function getPageSubtitleEn() {
+    const path = window.location.pathname;
+    const filename = path.split('/').pop();
+    const entry = PAGE_SUBTITLES[filename] || PAGE_SUBTITLES['dashboard.html'];
+    return entry.en;
+}
+
 // Инициализация навбара
 function initializeNavbar() {
     const currentPage = getCurrentPage();
@@ -85,9 +118,17 @@ function initializeNavbar() {
     if (titleElement) {
         titleElement.textContent = pageTitle;
         titleElement.setAttribute('data-i18n-en', getPageTitleEn());
-        if (window.SmartScrollI18N) window.SmartScrollI18N.refresh();
     }
-    
+
+    // Устанавливаем короткое пояснение, что это за страница
+    const subtitleElement = document.getElementById('pageSubtitle');
+    if (subtitleElement) {
+        subtitleElement.textContent = getPageSubtitle();
+        subtitleElement.setAttribute('data-i18n-en', getPageSubtitleEn());
+    }
+
+    if (window.SmartScrollI18N) window.SmartScrollI18N.refresh();
+
     // Убираем активный класс со всех элементов навбара
     document.querySelectorAll('.ss-navbar__item').forEach(item => {
         item.classList.remove('ss-navbar__item--active');
