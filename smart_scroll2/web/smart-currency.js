@@ -205,23 +205,6 @@ class SmartCurrency {
                     }
                 }
 
-                .smart-currency-display {
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    background: rgba(48, 202, 161, 0.1);
-                    border: 1px solid rgba(48, 202, 161, 0.3);
-                    border-radius: 20px;
-                    padding: 8px 16px;
-                    color: #30CAA1;
-                    font-weight: 600;
-                    font-size: 14px;
-                }
-
-                .smart-currency-display .smart-icon {
-                    font-size: 16px;
-                }
-
                 .smart-achievement-notification {
                     position: fixed;
                     top: 50%;
