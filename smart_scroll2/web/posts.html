@@ -984,6 +984,9 @@
         // Вспомогательные функции
         function createRedditUrl(post) {
             if (post.permalink) {
+                if (/^https?:\/\//i.test(post.permalink)) {
+                    return post.permalink;
+                }
                 const permalink = post.permalink.startsWith('/') ? post.permalink : `/${post.permalink}`;
                 return `https://www.reddit.com${permalink}`;
             }
