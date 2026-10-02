@@ -608,7 +608,7 @@
                 
                 achievementCard.innerHTML = `
                     <div class="achievement-icon">${item.icon}</div>
-                    <div class="achievement-name">${item.name}</div>
+                    <div class="achievement-name" data-i18n-en="${item.nameEn || item.name}">${item.name}</div>
                     <div class="achievement-type"><span data-i18n-en="${getTypeLabelEn(item.type)}">${getTypeLabel(item.type)}</span></div>
                     <div class="achievement-price">${item.price} Smart</div>
                 `;
