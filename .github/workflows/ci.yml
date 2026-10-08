@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: smart_scroll2/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20 # same major as the Docker images
+          cache: npm
+          cache-dependency-path: smart_scroll2/web/package-lock.json
+      - run: npm ci
+      - run: npm test
+
+  docker-build:
+    # Smoke test: every image from the README deployment steps still builds (nothing is pushed).
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: smart_scroll2/web
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          for svc in web proxy token caddy; do
+            docker build -f Dockerfile.$svc -t smartscroll-$svc:ci .
+          done
