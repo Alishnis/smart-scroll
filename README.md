@@ -163,7 +163,7 @@ The question bank in `quiz-data-full.js` is derived from [OpenTriviaQA](https://
 - **Reddit fallback is unreliable.** Without Reddit credentials the proxy falls back to the public endpoint, which the author reports Reddit blocks by IP.
 - **Mixed Russian/English source.** The UI is bilingual, but code comments and some docs are in Russian.
 - **Dependency advisories.** `npm audit` reports advisories against the Express 4.x dependency tree; not yet upgraded.
-- **Legacy material in the repo** (vendored Edinburgh Speech Tools, older template copies, dev notes) is not used by the deployed app. <!-- TODO(owner): remove this bullet once the cleanup candidates are deleted. -->
+- **Legacy speech tools in the repo.** `smart_scroll2/#2/` (vendored Edinburgh Speech Tools / Festival) is only used by the optional `web/button-audio-server.py`, which is not part of the deployed app. <!-- TODO(owner): delete #2/ together with web/button-audio-server.py and the comment in button-audio.js. -->
 
 ## Author's role
 

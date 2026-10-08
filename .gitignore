@@ -2,7 +2,6 @@
 .env
 .env.*
 !.env.example
-!.env.gitkeep
 
 # Dependencies
 node_modules/
