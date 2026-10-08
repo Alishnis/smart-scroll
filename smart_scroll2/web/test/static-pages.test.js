@@ -26,8 +26,8 @@ test('same-origin API paths called by the front-end are proxied by nginx', () =>
     const locations = [...nginx.matchAll(/location\s+(\/[\w-]*)/g)].map((m) => m[1]);
     assert.ok(locations.length > 0);
 
-    // Known gap: conference-template-new.html polls /room/:name, which only the legacy
-    // twilio-token-server.js implements. The deployed stack has no such route, so the page
+    // Known gap: conference-template-new.html polls /room/:name, which only a legacy
+    // dev token server (since removed) implemented. The deployed stack has no such route, so the page
     // gets a 404 and shows its waiting message. Remove this entry once the route exists.
     const KNOWN_UNPROXIED = ['/room'];
 
