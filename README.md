@@ -159,16 +159,15 @@ The question bank in `quiz-data-full.js` is derived from [OpenTriviaQA](https://
 - **Unauthenticated proxy endpoints.** `/ai/chat` has no auth or rate limiting, so anyone who can reach the site can spend the OpenRouter key; `/proxy?url=` fetches arbitrary URLs server-side. Both are fine for a demo, not for production.
 - **Accounts are browser-only.** Login/registration (`auth-script.js`) stores users in `localStorage` with a simple non-cryptographic hash; stats and the points currency are per-browser. There is no user database.
 - **The YouTube key ships to the browser** (see Configuration).
-- **No Festival TTS.** Text-to-speech uses the browser's `speechSynthesis`. `button-audio.js` still tries an optional local server at `localhost:8001`, which is not part of the deployed stack, and silently disables itself.
+- **Basic text-to-speech only.** Text-to-speech uses the browser's `speechSynthesis`; there is no server-side TTS.
 - **Conference participant list is simulated.** The page polls `/room/:name`, which only a legacy dev server implements; the deployed token server does not.
 - **Reddit fallback is unreliable.** Without Reddit credentials the proxy falls back to the public endpoint, which the author reports Reddit blocks by IP.
 - **Mixed Russian/English source.** The UI is bilingual, but code comments and some docs are in Russian.
 - **Dependency advisories.** `npm audit` reports advisories against the Express 4.x dependency tree; not yet upgraded.
-- **Legacy speech tools in the repo.** `smart_scroll2/#2/` (vendored Edinburgh Speech Tools / Festival) is only used by the optional `web/button-audio-server.py`, which is not part of the deployed app. <!-- TODO(owner): delete #2/ together with web/button-audio-server.py and the comment in button-audio.js. -->
 
 ## Author's role
 
-SmartScroll started as a prototype the author inherited; the work in this repository is auditing, fixing and deploying it. The git history (22 commits, 2026-09-18 to 2026-10-02) was squashed on 2026-09-18, so the prototype's original authorship is not visible in git. <!-- TODO(owner): confirm both git identities in the log ("Алишер Романкул" and "Alishnis") are you, and name the prototype's original source/authors if you want to credit them. -->
+SmartScroll started as a prototype the author inherited; the work in this repository is auditing, fixing and deploying it. The git history was squashed on 2026-09-18 (first commit `5b9b731`), so the prototype's original authorship is not visible in git. <!-- TODO(owner): confirm both git identities in the log ("Алишер Романкул" and "Alishnis") are you, and name the prototype's original source/authors if you want to credit them. -->
 
 What was changed, from the commit history and code:
 
