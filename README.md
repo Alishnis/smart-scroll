@@ -137,7 +137,6 @@ smart_scroll2/
     Dockerfile.{web,proxy,token,caddy}, Caddyfile
     test/                       node:test suite
     quiz-data-full.js           question bank for the quiz page
-  квизы/                        scripts and source data used to generate quiz-data-full.js
 ```
 
 ## Testing
@@ -152,7 +151,7 @@ The suite (`web/test/`, Node's built-in test runner, runs in CI) covers: Twilio 
 
 ## Third-party data
 
-The question bank in `quiz-data-full.js` is generated from [OpenTriviaQA](https://github.com/uberspot/OpenTriviaQA) (Creative Commons Attribution-ShareAlike 4.0; the license text is in `квизы/OpenTriviaQA-master/LICENSE`).
+The question bank in `quiz-data-full.js` is derived from [OpenTriviaQA](https://github.com/uberspot/OpenTriviaQA) by uberspot and contributors, licensed under Creative Commons Attribution-ShareAlike 4.0 International (see the `LICENSE` file in the upstream repository). The data was converted to JavaScript for this app; the one-off conversion scripts and the raw dataset copy are no longer in the working tree (they remain in git history).
 
 ## Limitations
 
