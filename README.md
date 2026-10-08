@@ -122,6 +122,7 @@ The YouTube Data API key is **not** an environment variable: it is a constant in
 
 ```
 README.md
+LICENSE                         MIT
 .github/workflows/ci.yml        CI: tests (Node 20) + Docker image build smoke test
 smart_scroll2/
   docker-compose.yml            local stack: web, cors-proxy, token-server
@@ -179,4 +180,4 @@ What was changed, from the commit history and code:
 
 ## License
 
-MIT (`smart_scroll2/LICENSE`).
+MIT (`LICENSE`; identical copy in `smart_scroll2/LICENSE`).
