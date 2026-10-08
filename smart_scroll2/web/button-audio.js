@@ -263,7 +263,6 @@ class ButtonAudioSystem {
             try {
                 console.log(`🔊 Пытаемся озвучить: "${text}"`);
                 
-                // Используем speak.py скрипт из папки #2/festival/
                 const response = await fetch(`${this.festivalServerUrl}/api/speak-button`, {
                     method: 'POST',
                     headers: {
