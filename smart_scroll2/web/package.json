@@ -2,10 +2,10 @@
   "name": "smartscroll-cors-proxy",
   "version": "1.0.0",
   "description": "CORS Proxy Server for SmartScroll Reddit API",
-  "main": "cors-proxy-server.js",
+  "main": "cors-proxy.js",
   "scripts": {
-    "start": "node cors-proxy-server.js",
-    "dev": "nodemon cors-proxy-server.js",
+    "start": "node cors-proxy.js",
+    "dev": "nodemon cors-proxy.js",
     "install-deps": "npm install"
   },
   "dependencies": {
