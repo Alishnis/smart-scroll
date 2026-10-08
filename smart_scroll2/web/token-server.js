@@ -63,8 +63,8 @@ app.get('/info', (req, res) => {
     });
 });
 
-// Запуск сервера
-app.listen(PORT, () => {
+// Запуск сервера (только при прямом запуске: `node token-server.js`; при require() из тестов порт не занимается)
+if (require.main === module) app.listen(PORT, () => {
     console.log(`🚀 Сервер токенов запущен на порту ${PORT}`);
     console.log(`📡 URL: http://localhost:${PORT}`);
     console.log(`🔑 Account SID: ${accountSid}`);

@@ -259,8 +259,8 @@ app.post(['/', '/proxy'], (req, res) => {
     });
 });
 
-// Запуск сервера
-app.listen(PORT, () => {
+// Запуск сервера (только при прямом запуске: `node cors-proxy.js`; при require() из тестов порт не занимается)
+if (require.main === module) app.listen(PORT, () => {
     console.log(`🚀 CORS Proxy Server запущен на порту ${PORT}`);
     console.log(`🌐 URL: http://localhost:${PORT}`);
     console.log(`📋 Доступные эндпоинты:`);

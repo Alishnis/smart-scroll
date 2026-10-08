@@ -1,146 +1,90 @@
 # SmartScroll
 
-🎥 [Demo video](https://youtu.be/Zl6iXgb3fuk?si=xMeAGrdKMMrhBxiO)
+SmartScroll turns the endless-scroll feed (YouTube + Reddit) into a study tool: it adds AI summaries and quizzes to each item, a document Q&A page, activity stats, and a video-conferencing room for group study, as a plain static site plus two small Node services, containerized and deployed to Azure.
 
-SmartScroll turns the endless-scroll feed people already spend hours on (YouTube + Reddit) into a study tool: it pulls in video and post content, generates AI summaries and quizzes, lets you take notes alongside it, and adds a video-conferencing room for group study — all as a plain static site with a couple of small backend services, containerized and deployed to the cloud.
+**Live demo:** https://smartscroll-app.germanywestcentral.azurecontainer.io
+**Demo video:** https://youtu.be/Zl6iXgb3fuk?si=xMeAGrdKMMrhBxiO
 
----
+> Reddit search, AI features and video rooms need real API keys behind the server (see [Configuration](#configuration)). Without them the app still loads; Reddit search falls back to the public endpoint, `/ai/chat` answers 503, and `/token` answers 500.
 
 ## Screenshots
 
-**Feed — AI video summary**
-![Feed with AI summary](smart_scroll2/docs/screenshots/feed-summary.png)
+| Feed: AI video summary | Feed: AI-generated quiz |
+|---|---|
+| ![Feed with AI summary](smart_scroll2/docs/screenshots/feed-summary.png) | ![Feed with quiz](smart_scroll2/docs/screenshots/feed-quiz.png) |
 
-**Feed — AI-generated quiz**
-![Feed with quiz](smart_scroll2/docs/screenshots/feed-quiz.png)
+| Stats: activity tracking | Document Reader |
+|---|---|
+| ![Stats page](smart_scroll2/docs/screenshots/stats.png) | ![Document reader](smart_scroll2/docs/screenshots/document-reader.png) |
 
-**Stats — activity tracking**
-![Stats page](smart_scroll2/docs/screenshots/stats.png)
+**Conferences: Twilio Video room, from a phone**
 
-**Document Reader — upload and ask questions**
-![Document reader](smart_scroll2/docs/screenshots/document-reader.png)
-
-**Conferences — Twilio Video room, from a phone**
 ![Video conference](smart_scroll2/docs/screenshots/conference.png)
 
-| Page | What it shows |
+## Features
+
+| Page | What it does |
 |---|---|
-| Feed (`feed.html`) | Mixed YouTube/Reddit feed, AI video summary + AI-generated quiz panel |
-| Posts (`posts.html`) | Reddit search, results pulled through the OAuth2 server-side proxy |
-| Stats (`stats.html`) | Live activity timer, achievements, weekly activity chart |
-| Smart Shop (`smart-shop.html`) | Points-based shop for achievements/badges/titles |
-| Conferences (`conference-template-new.html`) | Twilio Video room — join/create room, mute/camera/screen-share controls |
-| Document Reader (`document-reader.html`) | Upload a PDF/DOCX, ask questions about it, get AI answers |
+| Feed (`feed.html`) | Mixed YouTube/Reddit feed. Per video: AI summary (topics / key points / tips, generated from title and description) and an AI-generated 5-question quiz |
+| Posts (`posts.html`) | Reddit search through the server-side OAuth2 proxy |
+| Document Reader (`document-reader.html`) | Upload a PDF or DOCX (parsed in the browser with PDF.js / Mammoth), ask questions, get AI answers |
+| Flashcards (`flashcard-generator.html`) | AI-generated flashcards |
+| Quiz (`quiz-template.html`) | Quiz mode backed by a local question bank (see [Third-party data](#third-party-data)) |
+| Stats / Profile / Smart Shop | Activity timer and achievements, a points currency spendable on badges and titles |
+| Conference (`conference-template-new.html`) | Twilio Video room: join/create, mute, camera, screen share, picture-in-picture |
+| Eye Health (`eye-health.html`) | Break reminders and a brightness monitor |
+
+Details worth knowing:
+
+- **Quizzes are graded from data, not text.** The model is asked for strict JSON; the app builds the quiz DOM itself (unique radio group per question) and compares the chosen option to `correctAnswer` (`feed.html`).
+- **Bilingual UI (RU/EN).** One toggle re-translates the page; AI prompts ask the model to answer in the active language.
+- **One shared navbar** (`unified-navbar.*`) with an `ss-` CSS prefix so it does not collide with Bootstrap or page CSS.
 
 ## Architecture
 
 ```
 Browser
-  │
-  │  HTTPS (Let's Encrypt cert, auto-renewed)
-  ▼
-┌────────────────────────────────────────────────────────────┐
-│ Caddy  (reverse proxy + TLS termination, ports 80/443)      │
-└───────────────────────────┬──────────────────────────────────┘
-                             │ localhost:8080
-                             ▼
-┌────────────────────────────────────────────────────────────┐
-│ nginx ("web")  — serves the static HTML/CSS/JS app          │
-│   reverse-proxies same-origin paths to the two API services: │
-│   /reddit/*  → cors-proxy   /ai/*  → cors-proxy              │
-│   /proxy     → cors-proxy   /token → token-server            │
-└─────────┬──────────────────────────────────────┬─────────────┘
-          │                                       │
-          ▼                                       ▼
-┌────────────────────────┐            ┌──────────────────────────┐
-│ cors-proxy (Node)       │            │ token-server (Node)      │
-│ - Reddit OAuth2         │            │ - Signs short-lived JWTs │
-│   client-credentials    │            │   for Twilio Video       │
-│   flow (server-side —   │            │   (Account SID / API     │
-│   secret never reaches  │            │   Key / Secret stay      │
-│   the browser)          │            │   server-side)           │
-│ - /ai/chat: proxies to  │            └──────────────────────────┘
-│   OpenRouter with a     │
-│   server-held key       │
-└─────────┬───────────────┘
-          │
-          ▼
-  Reddit API · OpenRouter (DeepSeek / Mistral) · YouTube Data API (client-side, browser-restricted key) · Twilio Video
+  |  HTTPS (Let's Encrypt, Azure deployment only)
+  v
+Caddy (TLS termination, 80/443)               <- not part of docker-compose
+  |  localhost:8080
+  v
+nginx "web" (static HTML/CSS/JS + reverse proxy)
+  |  /reddit/*  /ai/*  /proxy  -> cors-proxy   (Node/Express, :3002)
+  |  /token                    -> token-server (Node/Express, :3007)
+  v
+cors-proxy:    Reddit OAuth2 client-credentials flow; /ai/chat -> OpenRouter with a server-held key
+token-server:  signs short-lived (1 h) Twilio Video JWTs; Twilio secrets stay server-side
 
-All four services (nginx, Caddy, cors-proxy, token-server) run as separate
-containers. Locally they talk to each other over Docker Compose's service
-DNS (`cors-proxy`, `token-server`); on Azure Container Instances they share
-one network namespace, so the same images are told to use `localhost`
-instead via an env var (`CORS_PROXY_HOST` / `TOKEN_SERVER_HOST`) — no code
-change needed to move between the two.
+External: Reddit API, OpenRouter, YouTube Data API v3 (called from the browser), Twilio Video
 ```
 
-**Why a server-side proxy at all?** Two unrelated reasons collided into the same fix:
-1. Reddit blocks unauthenticated `.json` requests by IP (confirmed by direct `curl` testing — a plain fetch from the browser gets `403 Blocked` regardless of User-Agent). A real Reddit app (client id + secret) needs a client-credentials OAuth2 exchange, and that exchange is CORS-blocked from a browser and would expose the secret if attempted client-side anyway — so it has to happen on a server.
-2. The OpenRouter (LLM) key is billable — hardcoding it in shipped HTML/JS would let anyone drain the account by reading the page source.
+Locally, `docker-compose.yml` runs `web`, `cors-proxy` and `token-server` (no Caddy, plain HTTP on port 3000). On Azure Container Instances all four containers share one network namespace, so the same images are pointed at `localhost` through `CORS_PROXY_HOST` / `TOKEN_SERVER_HOST` (see `aci-deploy.yaml`); no code change between environments.
 
-## Features
-
-- **Mixed educational feed** — YouTube videos + Reddit posts in one infinite-scroll feed
-- **AI video summaries** — structured breakdown (topics / key points / practical tips) generated from the video's title & description
-- **AI-generated quizzes** — the model returns strict JSON (not HTML), so the app builds the quiz DOM itself: every question gets a guaranteed-unique radio group and the correct answer is graded from data, not scraped from rendered text
-- **Document Q&A** — upload a PDF/DOCX, ask questions about its content, get AI answers grounded in the extracted text
-- **Reddit search** with real OAuth2-backed results (not the public unauthenticated endpoint, which is IP-blocked)
-- **Video conferencing** — Twilio Video rooms with mute/camera/screen-share/picture-in-picture controls
-- **Gamified stats & shop** — activity timer, achievements, a Smart-points currency spendable on badges/titles
-- **Bilingual UI (RU/EN)** — a single toggle re-translates the whole page, including AI responses (the app asks the model to answer in whichever language is active, not always Russian)
-- **One unified navbar/header** across every page, namespaced (`ss-` prefix) so it can't collide with Bootstrap or any page's legacy CSS
+**Why a server-side proxy?** (1) Reddit's OAuth2 client-credentials exchange is CORS-blocked from browsers and needs a client secret; the author reports unauthenticated `.json` requests from the browser were blocked by Reddit. (2) The OpenRouter key is billable, so it must not ship in page source.
 
 ## Tech stack
 
-**Frontend** — plain HTML/CSS/JavaScript, no framework, no build step. Twilio Video SDK, PDF.js/Mammoth.js for document parsing.
+- **Frontend:** plain HTML/CSS/JavaScript, no framework, no build step. Twilio Video SDK, PDF.js, Mammoth.js, Font Awesome, Bootstrap 4 (conference page).
+- **Backend:** Node.js 20 + Express: `cors-proxy.js` (Reddit + OpenRouter proxy), `token-server.js` (Twilio tokens, `jsonwebtoken`).
+- **Infra:** Docker / Docker Compose, nginx (`envsubst` template for upstream hosts), Caddy, Docker Hub images (`tmpalish/smartscroll-*`), Azure Container Instances.
+- **External APIs:** Reddit (OAuth2), YouTube Data API v3, OpenRouter (default model `deepseek/deepseek-v4-flash-0731`, set in `cors-proxy.js`), Twilio Video.
 
-**Backend services** (Node.js + Express):
-- `cors-proxy.js` — Reddit OAuth2 proxy + `/ai/chat` proxy to OpenRouter
-- `token-server.js` — Twilio Video access-token signing (`jsonwebtoken`)
+## Quick start
 
-**Infra**
-- Docker + Docker Compose (3 services locally: `web`, `cors-proxy`, `token-server`)
-- nginx (`nginx:alpine`), templated with `envsubst` so the same image adapts its upstream hostnames to either environment
-- Caddy — automatic HTTPS via Let's Encrypt (needed because `getUserMedia`/camera access requires a secure context, and the app is reached over a plain HTTP domain otherwise)
-- Docker Hub — public image registry
-- Azure Container Instances — the actual runtime, on an Azure for Students subscription
-
-**Third-party APIs** — Reddit API (OAuth2), YouTube Data API v3, OpenRouter (LLM routing — currently `deepseek/deepseek-chat-v3.1`), Twilio Video.
-
-## My contribution
-
-This was an existing prototype I inherited with a lot of rough edges; the work here was auditing, fixing, and hardening it into something actually deployable:
-
-- **Found and rotated leaked secrets.** The original repo had real Reddit/YouTube/OpenAI keys committed in plaintext (`.env.example`, `README.md`, and — worse — hardcoded directly in client-side `<script>` tags, meaning they were visible to any visitor). Squashed the git history to scrub them and rewired the app to fetch server-side keys through the proxy instead of shipping them to the browser.
-- **Fixed real, previously-silent bugs**, not just cosmetic ones:
-  - The Reddit proxy pointed at the wrong port *and* the wrong path (`/reddit/search.json` vs the actual `/reddit/search` route) — it had never actually worked, just silently fallen back to demo data.
-  - The quiz feature's answer grading was fundamentally broken: the AI-generated HTML reused the same radio-button `name` for every question (copied verbatim from the prompt's one-question example), so selecting an answer in question 5 silently un-selected 1–4, and correctness was guessed with regexes over rendered explanation text. Rebuilt it so the model returns structured JSON and the app renders/grades the quiz itself.
-  - AI responses were hardcoded to Russian regardless of the UI's EN/RU toggle.
-- **Unified a genuinely inconsistent UI** — different pages shipped different navbars, a leftover template card that wrapped page content in an unstyled gray box, a double-navbar bug, and a missing translation for a whole page — into one namespaced, collision-proof shared header/nav component.
-- **Took the app from "runs on my machine" to actually deployable**: everything that assumed `localhost` (the API proxy calls, the Twilio token server) only worked because dev and server were the same machine. Converted those to relative URLs behind an nginx reverse proxy, containerized the previously-unwrapped Twilio token server, and added Caddy for TLS — without which video conferencing is a hard browser-level failure (`getUserMedia` refuses to run outside a secure context).
-- **Deployed it for real**: built and pushed the images to Docker Hub, and stood up the whole stack — nginx, both Node services, and Caddy — on Azure Container Instances.
-
-## Demo
-
-**Live:** https://smartscroll-app.germanywestcentral.azurecontainer.io
-
-Video conferencing needs a real Twilio account behind it and the site needs its `.env` populated (see [Deployment](#deployment)) — if you're spinning this up fresh, expect Reddit search / AI features / video rooms to silently fall back to demo data until real keys are supplied.
-
-## Deployment
-
-**Images:** [`tmpalish/smartscroll-web`](https://hub.docker.com/r/tmpalish/smartscroll-web) · [`tmpalish/smartscroll-cors-proxy`](https://hub.docker.com/r/tmpalish/smartscroll-cors-proxy) · [`tmpalish/smartscroll-token-server`](https://hub.docker.com/r/tmpalish/smartscroll-token-server) · [`tmpalish/smartscroll-caddy`](https://hub.docker.com/r/tmpalish/smartscroll-caddy)
-
-### Locally (Docker Compose)
+Requires Docker with Compose. This is the supported way to run the app: the front-end calls same-origin `/ai/*`, `/reddit/*`, `/token`, which nginx proxies, so a bare static file server is not enough.
 
 ```bash
-cd smart_scroll2
-cp .env.example .env   # fill in real API keys
+git clone <this-repo-url>
+cd <repo>/smart_scroll2
+cp .env.example .env      # fill in real keys (all optional, see Configuration)
 docker compose up --build
-# → http://localhost:3000
+# -> http://localhost:3000
 ```
 
-### Azure Container Instances
+Verified: with the placeholder `.env.example` values the three containers build and start, `http://localhost:3000/` and `/feed.html` return 200, `/token?identity=demo` returns a signed JWT, and `POST /ai/chat` reaches OpenRouter (which rejects the placeholder key).
+
+### Deploy to Azure Container Instances
 
 ```bash
 cd smart_scroll2
@@ -148,32 +92,92 @@ az login
 az group create --name smartscroll-rg --location germanywestcentral
 
 # build + push each image for linux/amd64 (Apple Silicon defaults to arm64)
-for svc in web cors-proxy token-server caddy; do
-  docker buildx build --platform linux/amd64 -f web/Dockerfile.$svc \
-    -t tmpalish/smartscroll-$svc:latest --push web
+for pair in web:web proxy:cors-proxy token:token-server caddy:caddy; do  # Dockerfile suffix:image name
+  docker buildx build --platform linux/amd64 -f web/Dockerfile.${pair%%:*} \
+    -t tmpalish/smartscroll-${pair##*:}:latest --push web
 done
 
 az container create --resource-group smartscroll-rg --file aci-deploy.yaml
 ```
 
-Fill in the placeholder values in `smart_scroll2/aci-deploy.yaml` from your own `.env` first. If you pick a different `dnsNameLabel`/region, update the domain in `smart_scroll2/web/Caddyfile` to match — Caddy only requests a certificate for the hostname it's told about.
+Before deploying, fill the placeholder values in `aci-deploy.yaml` from your own `.env` and use your own Docker Hub namespace instead of `tmpalish` (image names there are `smartscroll-web`, `smartscroll-cors-proxy`, `smartscroll-token-server`, `smartscroll-caddy`). If you change `dnsNameLabel` or region, update the hostname in `smart_scroll2/web/Caddyfile`; Caddy only requests a certificate for the host it is given.
 
-`aci-deploy.yaml` deploys 4 containers sharing one network namespace (Azure Container Instances has no inter-container DNS, only shared `localhost`):
+## Configuration
 
-| Container | Role | Publicly exposed |
-|---|---|---|
-| `caddy` | TLS termination, auto Let's Encrypt cert for the `*.azurecontainer.io` FQDN | 80, 443 |
-| `web` (nginx) | Static site + reverse proxy to the two API services | — (internal `8080`) |
-| `cors-proxy` | Reddit OAuth2, `/ai/chat` → OpenRouter | — (internal `3002`) |
-| `token-server` | Twilio Video JWT signing | — (internal `3007`) |
+Set in `smart_scroll2/.env` (gitignored; template: `smart_scroll2/.env.example`). On Azure the same values go into `aci-deploy.yaml`.
 
-Environment variables (Reddit/OpenRouter/Twilio credentials) are injected per-container from `.env` at deploy time — they never get baked into the image or committed to git.
+| Variable | Used by | Required | Default | Purpose |
+|---|---|---|---|---|
+| `REDDIT_CLIENT_ID` / `REDDIT_CLIENT_SECRET` | cors-proxy | No | none | Reddit OAuth2 app credentials. Without them search falls back to the public endpoint |
+| `REDDIT_USER_AGENT` | cors-proxy | No | `SmartScroll/1.0` | User-Agent sent to Reddit |
+| `OPENROUTER_API_KEY` | cors-proxy | For AI features | none | Without it `/ai/chat` returns 503 |
+| `OPENROUTER_MODEL` | cors-proxy | No | `deepseek/deepseek-v4-flash-0731` | Model used for summaries, quizzes, Q&A. The `aci-deploy.yaml` template sets `mistralai/mistral-nemo` <!-- TODO(owner): which model does the live demo actually run? --> |
+| `TWILIO_ACCOUNT_SID` / `TWILIO_API_KEY` / `TWILIO_API_SECRET` | token-server | For video rooms | none | Twilio API key used to sign access tokens |
+| `CORS_PROXY_HOST` / `TOKEN_SERVER_HOST` | web (nginx) | No | `cors-proxy` / `token-server` | Upstream hostnames; `localhost` on Azure |
+| `WEB_PORT` | web (nginx) | No | `80` | nginx listen port; `8080` on Azure behind Caddy |
 
-## Results
+The YouTube Data API key is **not** an environment variable: it is a constant in `smart_scroll2/web/feed.html` and is visible to every visitor, so it must be restricted by HTTP referrer and API in the Google Cloud console.
 
-- The app runs end-to-end on a public HTTPS URL, not just `localhost` — every feature that used to silently depend on dev and server being the same machine (API proxying, video conferencing) now works identically in both places.
-- Reddit search returns real, live results through a genuine OAuth2 flow instead of failing over to demo posts.
-- The quiz feature grades correctly: 5 independently-answerable questions instead of one shared radio group.
-- AI-generated content (summaries, quizzes, document Q&A) responds in whichever language the UI is set to.
-- Video conferencing actually connects — `getUserMedia` works because the deployed app is served over valid HTTPS.
-- No API key or secret is reachable by reading the page source or the git history anymore (the remaining Reddit/OpenRouter/Twilio credentials only exist inside container environment variables on the Azure deployment and in the local, git-ignored `.env`).
+## Project structure
+
+```
+README.md
+LICENSE                         MIT
+.github/workflows/ci.yml        CI: tests (Node 20) + Docker image build smoke test
+smart_scroll2/
+  docker-compose.yml            local stack: web, cors-proxy, token-server
+  aci-deploy.yaml               Azure Container Instances template (placeholders only)
+  .env.example                  configuration template
+  docs/screenshots/             images used in this README
+  LICENSE                       MIT
+  web/
+    *.html, *.js, *.css         static front-end (feed, posts, stats, shop, conference, ...)
+    cors-proxy.js               Reddit OAuth2 + OpenRouter proxy (Express, :3002)
+    token-server.js             Twilio Video token server (Express, :3007)
+    nginx.conf.template         same-origin routing to the two services
+    Dockerfile.{web,proxy,token,caddy}, Caddyfile
+    test/                       node:test suite
+    quiz-data-full.js           question bank for the quiz page
+```
+
+## Testing
+
+```bash
+cd smart_scroll2/web
+npm ci
+npm test
+```
+
+The suite (`web/test/`, Node's built-in test runner, runs in CI) covers: Twilio token signing and claims, behavior without credentials, the `/ai/chat` proxy (503 / 400 / key forwarded server-side), Reddit OAuth2 flow with token caching and public fallback, and static checks that every local script/link a page references exists, that every same-origin API path the front-end calls is routed by nginx, and that no page hardcodes `localhost:3002/3007`. There is no linter configured, and no browser/end-to-end tests: front-end logic that lives inline in the HTML (quiz rendering, stats) is not unit-tested.
+
+## Third-party data
+
+The question bank in `quiz-data-full.js` is derived from [OpenTriviaQA](https://github.com/uberspot/OpenTriviaQA) by uberspot and contributors, licensed under Creative Commons Attribution-ShareAlike 4.0 International (see the `LICENSE` file in the upstream repository). The data was converted to JavaScript for this app; the one-off conversion scripts and the raw dataset copy are no longer in the working tree (they remain in git history).
+
+## Limitations
+
+- **Unauthenticated proxy endpoints.** `/ai/chat` has no auth or rate limiting, so anyone who can reach the site can spend the OpenRouter key; `/proxy?url=` fetches arbitrary URLs server-side. Both are fine for a demo, not for production.
+- **Accounts are browser-only.** Login/registration (`auth-script.js`) stores users in `localStorage` with a simple non-cryptographic hash; stats and the points currency are per-browser. There is no user database.
+- **The YouTube key ships to the browser** (see Configuration).
+- **No Festival TTS.** Text-to-speech uses the browser's `speechSynthesis`. `button-audio.js` still tries an optional local server at `localhost:8001`, which is not part of the deployed stack, and silently disables itself.
+- **Conference participant list is simulated.** The page polls `/room/:name`, which only a legacy dev server implements; the deployed token server does not.
+- **Reddit fallback is unreliable.** Without Reddit credentials the proxy falls back to the public endpoint, which the author reports Reddit blocks by IP.
+- **Mixed Russian/English source.** The UI is bilingual, but code comments and some docs are in Russian.
+- **Dependency advisories.** `npm audit` reports advisories against the Express 4.x dependency tree; not yet upgraded.
+- **Legacy speech tools in the repo.** `smart_scroll2/#2/` (vendored Edinburgh Speech Tools / Festival) is only used by the optional `web/button-audio-server.py`, which is not part of the deployed app. <!-- TODO(owner): delete #2/ together with web/button-audio-server.py and the comment in button-audio.js. -->
+
+## Author's role
+
+SmartScroll started as a prototype the author inherited; the work in this repository is auditing, fixing and deploying it. The git history (22 commits, 2026-09-18 to 2026-10-02) was squashed on 2026-09-18, so the prototype's original authorship is not visible in git. <!-- TODO(owner): confirm both git identities in the log ("Алишер Романкул" and "Alishnis") are you, and name the prototype's original source/authors if you want to credit them. -->
+
+What was changed, from the commit history and code:
+
+- **Removed hardcoded credentials.** Real Reddit/YouTube/OpenAI keys had been committed in plaintext (including in client-side `<script>` tags). They were removed and history squashed (`5b9b731`); Reddit and OpenRouter calls now go through the server-side proxy. <!-- TODO(owner): confirm whether the leaked Reddit, Twilio, YouTube and OpenAI credentials were rotated; the previous README said "rotated", but a comment in the local .env says rotation was still recommended. -->
+- **Fixed silent bugs:** the Reddit proxy used the wrong port and path (`/reddit/search.json` vs the real `/reddit/search` route) so it always fell back to demo data; quiz grading was broken (every question shared one radio `name`, correctness guessed by regex), rebuilt around structured JSON (`2327fed`); AI answers were hardcoded to Russian regardless of the UI toggle; stats and time tracking were rewired to reflect real activity (`0c440a4`, `fc3638b`); the currency/reward and achievement flows were fixed and translated (`8ba0ba7`, `303363f`, `0f535f9`).
+- **Unified the UI:** single namespaced navbar, Font Awesome icons instead of mixed emoji, mobile-responsive layouts (`af45108`, `d941aa1`).
+- **Made it deployable:** replaced localhost API calls with same-origin URLs behind an nginx reverse proxy, containerized the Twilio token server, added Caddy for HTTPS (required for `getUserMedia`), and deployed the four containers to Azure Container Instances (`090c55d`, `ed4723e`, `f298323`).
+- **Recruiter-readiness pass (branch `cleanup/recruiter-ready`):** removed the last hardcoded `localhost:3007` token call, fixed `npm start` to run the proxy the image actually runs, completed `.env.example`, added `.gitignore`, tests and CI.
+
+## License
+
+MIT (`LICENSE`; identical copy in `smart_scroll2/LICENSE`).

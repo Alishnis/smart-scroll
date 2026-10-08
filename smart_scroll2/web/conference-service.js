@@ -158,7 +158,7 @@ class ConferenceService {
     // Получить токен доступа
     async getAccessToken(roomName, userName) {
         try {
-            const response = await fetch(`http://localhost:3007/token?identity=${encodeURIComponent(userName)}`);
+            const response = await fetch(`/token?identity=${encodeURIComponent(userName)}`);
 
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
