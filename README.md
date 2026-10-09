@@ -2,7 +2,7 @@
 
 SmartScroll turns the endless-scroll feed (YouTube + Reddit) into a study tool: it adds AI summaries and quizzes to each item, a document Q&A page, activity stats, and a video-conferencing room for group study, as a plain static site plus two small Node services, containerized and deployed to Azure.
 
-**Live demo:** https://smartscroll-app.germanywestcentral.azurecontainer.io
+**Live demo:** TODO(owner): add the Hugging Face Space URL after the first deploy (see [docs/DEPLOY.md](docs/DEPLOY.md)). The previous Azure URL is not maintained and may not be live.
 **Demo video:** https://youtu.be/Zl6iXgb3fuk?si=xMeAGrdKMMrhBxiO
 
 > Reddit search, AI features and video rooms need real API keys behind the server (see [Configuration](#configuration)). Without them the app still loads; Reddit search falls back to the public endpoint, `/ai/chat` answers 503, and `/token` answers 500.
@@ -84,7 +84,14 @@ docker compose up --build
 
 Verified: with the placeholder `.env.example` values the three containers build and start, `http://localhost:3000/` and `/feed.html` return 200, `/token?identity=demo` returns a signed JWT, and `POST /ai/chat` reaches OpenRouter (which rejects the placeholder key).
 
-### Deploy to Azure Container Instances
+### Deploy to a free Hugging Face Space
+
+The current deployment target is a single-container Docker Space (nginx + the two Node services on port 7860), published by a GitHub Actions workflow on push to `main` once the `HF_SPACE_ID` repository variable and `HF_TOKEN` secret are set; without them the workflow skips cleanly. Owner steps, Space secrets, and cold-start behavior (sleeps after about 48 hours idle, wakes in about a minute) are in [docs/DEPLOY.md](docs/DEPLOY.md). Stage the Space folder locally with `scripts/stage_hf_space.sh`.
+
+### Legacy: deploy to Azure Container Instances
+
+Kept for reference; no longer the active deployment.
+
 
 ```bash
 cd smart_scroll2
@@ -124,9 +131,13 @@ The YouTube Data API key is **not** an environment variable: it is a constant in
 README.md
 LICENSE                         MIT
 .github/workflows/ci.yml        CI: tests (Node 20) + Docker image build smoke test
+.github/workflows/deploy-hf-space.yml   deploy to a Hugging Face Space (skips if HF_SPACE_ID unset)
+scripts/                        stage_hf_space.sh, upload_hf_space.py
+docs/DEPLOY.md                  free-hosting deployment steps
 smart_scroll2/
+  space/                        single-container Hugging Face Space image (Dockerfile.space, nginx.conf, entrypoint.sh)
   docker-compose.yml            local stack: web, cors-proxy, token-server
-  aci-deploy.yaml               Azure Container Instances template (placeholders only)
+  aci-deploy.yaml               legacy Azure Container Instances template (placeholders only)
   .env.example                  configuration template
   docs/screenshots/             images used in this README
   LICENSE                       MIT
