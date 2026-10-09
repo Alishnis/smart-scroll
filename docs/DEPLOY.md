@@ -1,57 +1,56 @@
-# Deploying to a free Hugging Face Space
+# Running it
 
-The app runs as **one container** on a Hugging Face Docker Space (free CPU): nginx on port 7860 serves the static site and reverse-proxies `/reddit/*`, `/ai/*`, `/proxy` to `cors-proxy` (:3002) and `/token` to `token-server` (:3007), using the same `smart_scroll2/web/nginx.conf.template` as the compose/Azure setup. `smart_scroll2/space/entrypoint.sh` starts the three processes and exits if any of them dies, so Hugging Face restarts the container. Everything runs as UID 1000.
+There is no live demo right now: the Azure student credit that hosted it ran out, and the project is not hosted on paid or card-required tiers. Demo video: https://youtu.be/Zl6iXgb3fuk
 
-> **Legacy:** `smart_scroll2/aci-deploy.yaml`, `smart_scroll2/web/Dockerfile.caddy`, `smart_scroll2/web/Caddyfile` and the Azure steps in the README describe the previous Azure Container Instances deployment. They are kept for reference and are not used by the Space.
+You can run the whole app locally with Docker, in either of two ways. All environment variables are optional; a missing one only disables its feature (see below).
 
-## How deployment works
+## Option 1: docker compose (three containers)
 
-Push to `main` (touching `smart_scroll2/`) or run the workflow manually -> `.github/workflows/deploy-hf-space.yml` runs `scripts/stage_hf_space.sh` (builds the Space folder: `README.md` front matter, root `Dockerfile`, `web/`, `space/`) and `scripts/upload_hf_space.py` (`create_repo(exist_ok=True, repo_type="space", space_sdk="docker")` + `upload_folder`). Hugging Face then builds the image and starts the Space.
+```bash
+cd smart_scroll2
+cp .env.example .env      # fill in real keys, all optional
+docker compose up --build
+# -> http://localhost:3000
+```
 
-If the repository variable `HF_SPACE_ID` is not set, the workflow prints a message and skips; CI stays green. If `HF_SPACE_ID` is set but `HF_TOKEN` is missing, the workflow fails with a clear error.
+This runs `web` (nginx + static site), `cors-proxy` and `token-server`.
 
-## Owner steps (one-time)
+## Option 2: single container
 
-1. Create a Hugging Face account and a **write** access token: https://huggingface.co/settings/tokens
-2. Add the token and the Space id to the GitHub repository (the Space is created on the first deploy if it does not exist; pick any `<space-name>`):
-   ```bash
-   gh secret set HF_TOKEN --repo Alishnis/smart-scroll          # paste the token when prompted
-   gh variable set HF_SPACE_ID --repo Alishnis/smart-scroll --body <hf-user>/<space-name>
-   ```
-3. Trigger the first deploy: Actions -> "Deploy to Hugging Face Space" -> Run workflow (or push to `main`).
-4. In the Space on huggingface.co: Settings -> Variables and secrets -> add the **secrets** below (they reach the container as environment variables). Restart the Space after changing them.
-5. Put the live URL (`https://<hf-user>-<space-name>.hf.space`) into the README (search for `TODO(owner)`).
+One image runs nginx plus both Node services and serves everything on port 7860, using the same `web/nginx.conf.template` as compose. It runs as UID 1000. Built and run locally to verify: the image is about 241 MB, `/` and `/feed.html` return 200, and `/token` returns 200 when the Twilio variables are set.
 
-### Space secrets (names only; values come from your own accounts)
+```bash
+cd smart_scroll2
+docker build -f space/Dockerfile.space -t smartscroll-single .
+docker run --rm -p 7860:7860 --env-file .env smartscroll-single
+# -> http://localhost:7860
+```
+
+`space/Dockerfile.space.dockerignore` keeps `.env` files and `node_modules` out of the build context. `space/entrypoint.sh` starts the three processes and exits if any of them dies.
+
+## Environment variables (names only)
+
+Template: `smart_scroll2/.env.example`. Never commit real values.
 
 | Name | Used by | Needed for |
 |---|---|---|
-| `OPENROUTER_API_KEY` | cors-proxy | AI summaries, quizzes, document Q&A (503 without it) |
-| `OPENROUTER_MODEL` | cors-proxy | optional; default is set in `cors-proxy.js` |
 | `REDDIT_CLIENT_ID` | cors-proxy | Reddit search via OAuth2 (falls back to the public endpoint without it) |
 | `REDDIT_CLIENT_SECRET` | cors-proxy | same |
 | `REDDIT_USER_AGENT` | cors-proxy | optional |
+| `OPENROUTER_API_KEY` | cors-proxy | AI summaries, quizzes, document Q&A (503 without it) |
+| `OPENROUTER_MODEL` | cors-proxy | optional; default is set in `cors-proxy.js` |
 | `TWILIO_ACCOUNT_SID` | token-server | video rooms (`/token` answers 500 without them) |
 | `TWILIO_API_KEY` | token-server | same |
 | `TWILIO_API_SECRET` | token-server | same |
 
-Every one is optional: a missing one only disables its feature. Never commit real values; see `smart_scroll2/.env.example`.
+## Legacy: Azure files
+
+`smart_scroll2/aci-deploy.yaml`, `smart_scroll2/web/Dockerfile.caddy` and `smart_scroll2/web/Caddyfile` are reference material for the former Azure Container Instances deployment, which was taken offline when the student credit ran out. They are not used by the options above.
 
 ## Browser-shipped YouTube key (action required)
 
-The YouTube Data API key is a constant in `smart_scroll2/web/feed.html` and is visible to every visitor. It is not a Space secret. The owner must **rotate it** and **restrict the new key by HTTP referrer** (the `*.hf.space` origin and any custom domain) and by API (YouTube Data API v3) in the Google Cloud console.
+The YouTube Data API key is a constant in `smart_scroll2/web/feed.html` and is visible to every visitor. It is not an environment variable. It must be **rotated**, and the new key **restricted by HTTP referrer** (the origins the app is served from) and by API (YouTube Data API v3) in the Google Cloud console.
 
-## Behavior to expect
+## Security note
 
-- **Cold start:** a free Space goes to sleep after about 48 hours without traffic. The first visit afterwards wakes it, which takes about a minute.
-- **HTTPS:** Spaces are served over HTTPS, which `getUserMedia` (camera/microphone in video rooms) requires. If the camera is blocked while the app is shown inside the huggingface.co Space page, open the direct `*.hf.space` URL instead.
-- **Unauthenticated endpoints:** `/ai/chat` and `/proxy?url=` have no auth or rate limiting (see README "Limitations"). Anyone who can reach the Space can spend the OpenRouter key; consider a spending cap on that key.
-
-## Run the same image locally
-
-```bash
-scripts/stage_hf_space.sh /tmp/hf-space
-docker build -t smartscroll-space /tmp/hf-space
-docker run --rm -p 7860:7860 --env-file smart_scroll2/.env smartscroll-space
-# -> http://localhost:7860
-```
+`/ai/chat` and `/proxy?url=` have no auth or rate limiting (see README "Limitations"). Anyone who can reach a running instance can spend its OpenRouter key; if you expose one publicly, put a spending cap on that key.

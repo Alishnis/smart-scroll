@@ -1,15 +1,12 @@
-# Single-container image for a Hugging Face Docker Space (free CPU).
+# Single-container image: nginx + cors-proxy + token-server in one container.
 #
-# Build context is the folder produced by scripts/stage_hf_space.sh, which
-# copies this file to the context root as "Dockerfile" and lays out:
-#   web/    the app (static site, cors-proxy.js, token-server.js, package files,
-#           nginx.conf.template)
-#   space/  nginx.conf, entrypoint.sh
+# Build from the smart_scroll2/ directory as context (see docs/DEPLOY.md):
+#   docker build -f space/Dockerfile.space -t smartscroll-single .
 #
-# One public port (7860 = app_port in the Space README): nginx serves the static
-# site and reverse-proxies /reddit /ai /proxy -> cors-proxy and /token ->
-# token-server, using the same nginx.conf.template as the Azure/compose setup.
-# Everything runs as UID 1000 (what Hugging Face uses): nothing needs root.
+# One public port (7860): nginx serves the static site and reverse-proxies
+# /reddit /ai /proxy -> cors-proxy and /token -> token-server, using the same
+# web/nginx.conf.template as the compose setup.
+# Everything runs as UID 1000: nothing needs root.
 FROM node:20-alpine
 
 RUN apk add --no-cache nginx bash
