@@ -2,8 +2,8 @@
 
 SmartScroll turns the endless-scroll feed (YouTube + Reddit) into a study tool: it adds AI summaries and quizzes to each item, a document Q&A page, activity stats, and a video-conferencing room for group study, as a plain static site plus two small Node services, containerized and deployed to Azure.
 
-**Live demo:** https://smartscroll-app.germanywestcentral.azurecontainer.io
-**Demo video:** https://youtu.be/Zl6iXgb3fuk?si=xMeAGrdKMMrhBxiO
+**Live demo:** offline for now (the Azure student credit that hosted it ran out).
+**Demo video:** https://youtu.be/Zl6iXgb3fuk
 
 > Reddit search, AI features and video rooms need real API keys behind the server (see [Configuration](#configuration)). Without them the app still loads; Reddit search falls back to the public endpoint, `/ai/chat` answers 503, and `/token` answers 500.
 
@@ -84,7 +84,14 @@ docker compose up --build
 
 Verified: with the placeholder `.env.example` values the three containers build and start, `http://localhost:3000/` and `/feed.html` return 200, `/token?identity=demo` returns a signed JWT, and `POST /ai/chat` reaches OpenRouter (which rejects the placeholder key).
 
-### Deploy to Azure Container Instances
+### Single-container option
+
+An alternative is one image running nginx and both Node services on port 7860: `docker build -f space/Dockerfile.space -t smartscroll-single .` from `smart_scroll2/`, then `docker run --rm -p 7860:7860 --env-file .env smartscroll-single`. Built and run locally (241 MB, runs as UID 1000). Details and environment variable names are in [docs/DEPLOY.md](docs/DEPLOY.md).
+
+### Legacy: deploy to Azure Container Instances
+
+Kept for reference. This was the previous deployment; it was taken offline when the Azure student credit ran out.
+
 
 ```bash
 cd smart_scroll2
@@ -124,9 +131,11 @@ The YouTube Data API key is **not** an environment variable: it is a constant in
 README.md
 LICENSE                         MIT
 .github/workflows/ci.yml        CI: tests (Node 20) + Docker image build smoke test
+docs/DEPLOY.md                  how to run it (compose, single container, env var names)
 smart_scroll2/
+  space/                        single-container image (Dockerfile.space, nginx.conf, entrypoint.sh)
   docker-compose.yml            local stack: web, cors-proxy, token-server
-  aci-deploy.yaml               Azure Container Instances template (placeholders only)
+  aci-deploy.yaml               legacy Azure Container Instances template (placeholders only)
   .env.example                  configuration template
   docs/screenshots/             images used in this README
   LICENSE                       MIT

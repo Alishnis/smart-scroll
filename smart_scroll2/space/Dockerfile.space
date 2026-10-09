@@ -1,0 +1,45 @@
+# Single-container image: nginx + cors-proxy + token-server in one container.
+#
+# Build from the smart_scroll2/ directory as context (see docs/DEPLOY.md):
+#   docker build -f space/Dockerfile.space -t smartscroll-single .
+#
+# One public port (7860): nginx serves the static site and reverse-proxies
+# /reddit /ai /proxy -> cors-proxy and /token -> token-server, using the same
+# web/nginx.conf.template as the compose setup.
+# Everything runs as UID 1000: nothing needs root.
+FROM node:20-alpine
+
+RUN apk add --no-cache nginx bash
+
+# --- Node services (same install steps as Dockerfile.proxy / Dockerfile.token) ---
+WORKDIR /app/proxy
+COPY web/package*.json ./
+RUN npm ci --omit=dev
+COPY web/cors-proxy.js ./
+
+WORKDIR /app/token
+COPY web/package.token.json package.json
+RUN npm install --omit=dev
+COPY web/token-server.js ./
+
+# --- nginx: reuse the existing routing template, pointed at 127.0.0.1 ---
+COPY web/ /usr/share/nginx/html/
+RUN rm -rf /usr/share/nginx/html/node_modules /usr/share/nginx/html/test \
+           /usr/share/nginx/html/Dockerfile.* /usr/share/nginx/html/Caddyfile \
+           /usr/share/nginx/html/nginx.conf.template /usr/share/nginx/html/env.example \
+           /usr/share/nginx/html/package*.json
+COPY web/nginx.conf.template /tmp/site.conf.template
+RUN sed -e 's/\${CORS_PROXY_HOST}/127.0.0.1/g' \
+        -e 's/\${TOKEN_SERVER_HOST}/127.0.0.1/g' \
+        -e 's/\${WEB_PORT}/7860/g' \
+        /tmp/site.conf.template > /etc/nginx/space-site.conf \
+ && rm /tmp/site.conf.template \
+ && ! grep -q '\${' /etc/nginx/space-site.conf
+COPY space/nginx.conf /etc/nginx/nginx.conf
+COPY space/entrypoint.sh /entrypoint.sh
+RUN chmod 755 /entrypoint.sh
+
+# node:20-alpine already ships user "node" with UID/GID 1000.
+USER 1000
+EXPOSE 7860
+CMD ["/entrypoint.sh"]

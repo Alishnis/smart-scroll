@@ -1,0 +1,7 @@
+# Used by: docker build -f space/Dockerfile.space (context: smart_scroll2/)
+.env
+.env.*
+**/.env
+**/.env.*
+**/.DS_Store
+**/node_modules
