@@ -22,3 +22,6 @@ Thumbs.db
 *.log
 npm-debug.log*
 coverage/
+
+# Staged Hugging Face Space folder (scripts/stage_hf_space.sh)
+build/
