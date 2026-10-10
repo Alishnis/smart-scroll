@@ -2,7 +2,7 @@
 
 SmartScroll turns the endless-scroll feed (YouTube + Reddit) into a study tool: it adds AI summaries and quizzes to each item, a document Q&A page, activity stats, and a video-conferencing room for group study, as a plain static site plus two small Node services, containerized.
 
-**Live demo:** not hosted at the moment.
+**Live demo:** TODO(owner): not deployed yet (see [Deployment](#deployment)).
 **Demo video:** https://youtu.be/Zl6iXgb3fuk
 
 > Reddit search, AI features and video rooms need real API keys behind the server (see [Configuration](#configuration)). Without them the app still loads; Reddit search falls back to the public endpoint, `/ai/chat` answers 503, and `/token` answers 500.
@@ -84,9 +84,22 @@ docker compose up --build
 
 Verified: with the placeholder `.env.example` values the three containers build and start, `http://localhost:3000/` and `/feed.html` return 200, `/token?identity=demo` returns a signed JWT, and `POST /ai/chat` reaches OpenRouter (which rejects the placeholder key).
 
-### Single-container option
+## Deployment
 
-An alternative is one image running nginx and both Node services on port 7860: `docker build -f space/Dockerfile.space -t smartscroll-single .` from `smart_scroll2/`, then `docker run --rm -p 7860:7860 --env-file .env smartscroll-single`. Built and run locally (241 MB, runs as UID 1000). Details and environment variable names are in [docs/DEPLOY.md](docs/DEPLOY.md).
+**Live demo:** TODO(owner): not deployed yet; add the URL here once it is. **Demo video:** https://youtu.be/Zl6iXgb3fuk
+
+The single-container image (nginx + both Node services on port 7860) is published to `ghcr.io/alishnis/smart-scroll` by `.github/workflows/publish-image.yml`, so it can run on any host that pulls a public image. [docs/DEPLOY.md](docs/DEPLOY.md) has a step-by-step walkthrough for SnapDeploy's free tier (no card), including the free-tier limits (sleeps when idle, no persistent disk) and the environment variable names.
+
+To build and run it locally instead:
+
+```bash
+cd smart_scroll2
+docker build -f space/Dockerfile.space -t smartscroll-single .
+docker run --rm -p 7860:7860 --env-file .env smartscroll-single
+# -> http://localhost:7860
+```
+
+Measured at about 30 MiB RAM with a 0.25 vCPU / 512 MB limit.
 
 ## Configuration
 
