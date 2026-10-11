@@ -1,6 +1,6 @@
 # Running it
 
-There is no live demo right now (TODO(owner): add the URL once deployed). Demo video: https://youtu.be/Zl6iXgb3fuk
+Live demo: https://smart-scroll-17cbf.containers.snapdeploy.app (free tier, sleeps after 15 minutes idle). Demo video: https://youtu.be/Zl6iXgb3fuk
 
 You can run the whole app locally with Docker, in either of two ways. All environment variables are optional; a missing one only disables its feature (see below).
 
