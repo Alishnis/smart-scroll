@@ -2,7 +2,7 @@
 
 SmartScroll turns the endless-scroll feed (YouTube + Reddit) into a study tool: it adds AI summaries and quizzes to each item, a document Q&A page, activity stats, and a video-conferencing room for group study, as a plain static site plus two small Node services, containerized.
 
-**Live demo:** TODO(owner): not deployed yet (see [Deployment](#deployment)).
+**Live demo:** https://smart-scroll-17cbf.containers.snapdeploy.app (free hosting: it sleeps after 15 minutes idle, so the first load can take about a minute). **Demo video:** https://youtu.be/Zl6iXgb3fuk
 **Demo video:** https://youtu.be/Zl6iXgb3fuk
 
 > Reddit search, AI features and video rooms need real API keys behind the server (see [Configuration](#configuration)). Without them the app still loads; Reddit search falls back to the public endpoint, `/ai/chat` answers 503, and `/token` answers 500.
@@ -86,7 +86,7 @@ Verified: with the placeholder `.env.example` values the three containers build 
 
 ## Deployment
 
-**Live demo:** TODO(owner): not deployed yet; add the URL here once it is. **Demo video:** https://youtu.be/Zl6iXgb3fuk
+**Live demo:** https://smart-scroll-17cbf.containers.snapdeploy.app (free hosting, sleeps after 15 minutes idle). **Demo video:** https://youtu.be/Zl6iXgb3fuk
 
 The single-container image (nginx + both Node services on port 7860) is published to `ghcr.io/alishnis/smart-scroll` by `.github/workflows/publish-image.yml`, so it can run on any host that pulls a public image. [docs/DEPLOY.md](docs/DEPLOY.md) has a step-by-step walkthrough for SnapDeploy's free tier (no card), including the free-tier limits (sleeps when idle, no persistent disk) and the environment variable names.
 
